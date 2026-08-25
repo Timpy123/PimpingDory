@@ -1,0 +1,22 @@
+# Dive footage — yours, large, and not the repo's business.
+media/
+
+# Local working directory. Never published.
+app/
+
+# Run logs and test-harness output.
+*.log
+dorytest-*
+diagnose-udp.txt
+dory.sock
+
+# Chasing's manual — their copyright, not ours to redistribute.
+# reference/manual.url points at the official download instead; the file it
+# fetches is byte-identical (sha256 8983227…12e2f) to the local copy.
+*.pdf
+
+.DS_Store
+claude.sh
+CLAUDE.md
+scripts/.firewall_was_on
+app/REFERENCE.md
