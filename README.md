@@ -434,5 +434,6 @@ Hardware. None of this is started.
 | what | for | where |
 |---|---|---|
 | **T6H screwdriver set** | removing the cover | [amazon.nl B0CZDN9Q1R](https://www.amazon.nl/dp/B0CZDN9Q1R?ref=ppx_yo2ov_dt_b_fed_asin_title) |
+| **Flat aluminium profile**, 20 × 2 × 2000 mm | the arm itself | [gamma.nl B175328](https://www.gamma.nl/assortiment/profiel-plat-aluminium-brut-20x2x2000mm/p/B175328) |
 | **1/4 inch thread adapters** | mounting the flashlights to the arm — the standard 1/4"-20 tripod thread | [amazon.nl B0DCGCCXQC](https://www.amazon.nl/dp/B0DCGCCXQC?ref=ppx_yo2ov_dt_b_fed_asin_title) |
 | **Wurkkos DL07 diving flashlight** ×2 | the light rig | [wurkkos.com](https://wurkkos.com/products/wurkkos-dl07-diving-flashlight?VariantsId=12525) |
