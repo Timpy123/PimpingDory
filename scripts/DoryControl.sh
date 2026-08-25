@@ -26,7 +26,7 @@ RETRIEVE=""; REMOVE=0; LIVE=0; LIVEFILE=""; LIST=0; TELEM=0; CONTROL=0; POWER=40
 # The buoy relays nothing until a client completes the netcode handshake on
 # UDP 40000, so it is on by default for everything that listens.
 NETCODE="${DORY_NETCODE:-1}"; NETCODE_ONLY=0
-CONTROL_KEY=""; TIMEOUT=""; GAP=3; LIGHTS="${DORY_LIGHTS:-off}"; LIGHTS_GIVEN=0; FINDLINK=0; PROBE=0; DIAGNOSE=0; IDENTIFY=0; DAEMON=0; SENDCMD=""
+CONTROL_KEY=""; TIMEOUT=""; GAP=3; LIGHTS="${DORY_LIGHTS:-off}"; LIGHTS_GIVEN=0; FINDLINK=0; PROBE=0; DIAGNOSE=0; IDENTIFY=0; MAXPOWER=0; DAEMON=0; SENDCMD=""
 # Defaults chosen for someone standing at the water: try the address the buoy
 # actually answers on, do not sweep, do not second-guess the Wi-Fi, do not ask.
 # Each one has an inverse flag for when you want the caution back.
@@ -72,6 +72,7 @@ while [ $# -gt 0 ]; do
     --findlink) FINDLINK=1; shift ;;
     --probe)    PROBE=1; shift ;;
     --identify) IDENTIFY=1; shift ;;
+    --maxpower) MAXPOWER=1; shift ;;
     --diagnose) DIAGNOSE=1; shift ;;
     --daemon)   DAEMON=1; shift ;;
     --send)     SENDCMD="${2:-status}"; shift 2 ;;
@@ -91,7 +92,7 @@ if [ -z "$RETRIEVE" ] && [ "$REMOVE" = 0 ] && [ "$LIVE" = 0 ] && [ "$LIST" = 0 ]
    && [ "$TELEM" = 0 ] && [ "$CONTROL" = 0 ] && [ "$NETCODE_ONLY" = 0 ] \
    && [ "$FINDLINK" = 0 ] && [ "$PROBE" = 0 ] && [ "$DIAGNOSE" = 0 ] \
    && [ "$DAEMON" = 0 ] && [ -z "$SENDCMD" ] && [ "$LIGHTS_GIVEN" = 0 ] \
-   && [ "$IDENTIFY" = 0 ]; then
+   && [ "$IDENTIFY" = 0 ] && [ "$MAXPOWER" = 0 ]; then
   usage >&2; exit 2
 fi
 
@@ -103,7 +104,7 @@ if [ "$LIGHTS_GIVEN" = 1 ] && [ -z "$RETRIEVE" ] && [ "$REMOVE" = 0 ] \
    && [ "$LIVE" = 0 ] && [ "$LIST" = 0 ] && [ "$TELEM" = 0 ] \
    && [ "$CONTROL" = 0 ] && [ "$NETCODE_ONLY" = 0 ] && [ "$FINDLINK" = 0 ] \
    && [ "$PROBE" = 0 ] && [ "$DIAGNOSE" = 0 ] && [ "$DAEMON" = 0 ] \
-   && [ -z "$SENDCMD" ] && [ "$IDENTIFY" = 0 ]; then
+   && [ -z "$SENDCMD" ] && [ "$IDENTIFY" = 0 ] && [ "$MAXPOWER" = 0 ]; then
   LIGHTS_ONLY=1
 fi
 
@@ -169,6 +170,7 @@ NEEDS_FW=0
 [ "$LIGHTS_ONLY" = "1" ] && NEEDS_FW=1
 [ "$FINDLINK" = "1" ] && NEEDS_FW=1
 [ "$IDENTIFY" = "1" ] && NEEDS_FW=1
+[ "$MAXPOWER" = "1" ] && NEEDS_FW=1
 
 if [ -n "$SENDCMD" ]; then
   # A pure client: it opens a Unix socket to a running daemon and binds no
@@ -293,7 +295,7 @@ export DORY_CONTROL="$CONTROL" DORY_POWER="$POWER" DORY_SELFTEST="$SELFTEST"
 export DORY_NETCODE="$NETCODE" DORY_NETCODE_ONLY="$NETCODE_ONLY"
 export DORY_CONTROL_KEY="$CONTROL_KEY" DORY_TIMEOUT="$TIMEOUT" DORY_GAP="$GAP" DORY_LIGHTS="$LIGHTS" DORY_LIGHTS_ONLY="$LIGHTS_ONLY"
 export DORY_FINDLINK="$FINDLINK" DORY_PROBE="$PROBE" DORY_DIAGNOSE="$DIAGNOSE"
-export DORY_DAEMON="$DAEMON" DORY_SENDCMD="$SENDCMD" DORY_IDENTIFY="$IDENTIFY"
+export DORY_DAEMON="$DAEMON" DORY_SENDCMD="$SENDCMD" DORY_IDENTIFY="$IDENTIFY" DORY_MAXPOWER="$MAXPOWER"
 
 # `ps` now shows `python3 .../dorycontrol.py`, which is identifiable on its
 # own -- an orphaned interpreter holding UDP 14550 was invisible when this was

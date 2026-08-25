@@ -41,7 +41,7 @@ for a in "$@"; do
   case "$a" in
     --keep) KEEP=1 ;;
     --all)  SKIPCONFIRMED=0 ;;
-    --sweep|--probe|--diagnose|--findlink|--identify) ONLY="$a" ;;
+    --sweep|--probe|--diagnose|--findlink|--identify|--maxpower) ONLY="$a" ;;
     -h|--help|--usage)
       cat <<'EOT'
 DoryTest.sh -- exercise DoryControl against the real drone
@@ -55,6 +55,8 @@ DoryTest.sh -- exercise DoryControl against the real drone
   --findlink     ONLY the destination sweep
   --identify     ONLY: ask the flight controller what firmware it runs and
                  dump every parameter it holds. Read-only, nothing is armed.
+  --maxpower     ONLY: EVERYTHING AT FULL for 30s, measuring current every
+                 5s. Six readings, then a peak. IN A BUCKET, TETHER IN HAND.
 
 Everything writes ./dorytest-<timestamp>.log. Run `sudo -v` first.
 EOT
@@ -388,6 +390,21 @@ if [ -n "$ONLY" ]; then
     --findlink)
       run "findlink: which address does the drone listen on" 90 -1 \
           "$CTL" --findlink --timeout 8 --debug ;;
+    --maxpower)
+      out ""
+      out ">>> ############################################################"
+      out ">>> FULL POWER. Every thruster at 100% and the lights at 100,"
+      out ">>> for 30 seconds, measuring the draw every 5 seconds."
+      out ">>>"
+      out ">>> IN A BUCKET, TETHER IN HAND. This is the most violent thing"
+      out ">>> the script can do. It arms, and it will thrash."
+      out ">>> ############################################################"
+      out ""
+      run "maxpower: full thrust, current every 5s for 30s" 90 -1 \
+          "$CTL" --maxpower --debug
+      out ""
+      out "     The peak amps decide the replacement cell: the pack is 1P,"
+      out "     so one 21700 has to deliver all of it." ;;
     --identify)
       out ""
       out ">>> Asking the flight controller what it is. Read-only: nothing"

@@ -139,6 +139,7 @@ NETCODE_ONLY = os.environ.get("DORY_NETCODE_ONLY") == "1"
 FINDLINK = os.environ.get("DORY_FINDLINK") == "1"
 PROBE = os.environ.get("DORY_PROBE") == "1"
 IDENTIFY = os.environ.get("DORY_IDENTIFY") == "1"
+MAXPOWER = os.environ.get("DORY_MAXPOWER") == "1"
 DIAGNOSE = os.environ.get("DORY_DIAGNOSE") == "1"
 DAEMON  = os.environ.get("DORY_DAEMON") == "1"
 SENDCMD = os.environ.get("DORY_SENDCMD") or ""
@@ -633,7 +634,7 @@ def mav_frames(buf):
 # nothing. This does the opposite -- every key decays back to
 # neutral after 400 ms unless repeated, and quitting sends a burst of neutral
 # and then a disarm.
-CRC_EXTRA = {0: 50, 11: 89, 20: 214, 21: 159, 22: 220,
+CRC_EXTRA = {0: 50, 11: 89, 20: 214, 21: 159, 22: 220, 66: 148,
              70: 124, 76: 152}   # from the app's own table
 # Only needed to read the drone's answers; nothing here is ever sent.
 MAV_RESULT = {0: "ACCEPTED", 1: "TEMPORARILY_REJECTED", 2: "DENIED",
@@ -770,6 +771,45 @@ def rc_override(channels, tgt_sys, tgt_comp, seq):
     import struct
     body = b"".join(struct.pack("<H", c) for c in channels)
     return mav_pack(70, body + bytes([tgt_sys, tgt_comp]), seq)
+
+# ArduPilot stream ids, and what each one carries.
+STREAMS = {
+    1:  "RAW_SENSORS",
+    2:  "EXTENDED_STATUS   — SYS_STATUS, BATTERY_STATUS, GPS_RAW_INT",
+    3:  "RC_CHANNELS",
+    4:  "RAW_CONTROLLER",
+    6:  "POSITION",
+    10: "EXTRA1            — ATTITUDE",
+    11: "EXTRA2            — VFR_HUD, which is where DEPTH comes from",
+    12: "EXTRA3",
+}
+
+def request_streams(sock, peer, tgt_sys, tgt_comp, rate=4, seq=0,
+                    ids=(2, 10, 11, 12)):
+    """Ask the vehicle to actually send telemetry.
+
+    THIS is why so little arrived. The parameter dump shows every stream rate
+    set to zero -- SR0_EXT_STAT 0, SR0_EXTRA1 0, SR0_EXTRA2 0, SR0_POSITION 0
+    -- so the vehicle streams nothing by default and the few messages that did
+    turn up came by other means. One BATTERY_STATUS in a thirty-second run is
+    not a slow sensor, it is a stream that was never started.
+
+    It also explains the missing depth: VFR_HUD lives in EXTRA2, and EXTRA2
+    was off.
+
+    REQUEST_DATA_STREAM (msg 66), the same message the app builds: rate as
+    uint16 first, then the two ids, then stream id and a start/stop flag."""
+    for sid in ids:
+        body = struct.pack("<H", rate) + bytes([tgt_sys, tgt_comp, sid,
+                                                1 if rate > 0 else 0])
+        try:
+            sock.sendto(mav_pack(66, body, seq & 0xFF), peer)
+        except OSError:
+            pass
+        seq += 1
+        dbg(f"REQUEST_DATA_STREAM {sid} ({STREAMS.get(sid, '?')}) at {rate} Hz")
+        time.sleep(0.05)
+    return seq
 
 def set_mode(custom_mode, tgt_sys, seq):
     """SET_MODE (msg 11), as the app builds it: target_system, base_mode = 1
@@ -2177,6 +2217,217 @@ def find_link(seconds_each=8):
     log("   findlink: " + "; ".join(f"{h}:{p} {v}" for h, p, v in results))
     return 0
 
+def maxpower(total=30.0, every=5.0):
+    """Everything at full, and measure what it draws.
+
+    The one number the cell choice depends on: peak current. The pack is 1P,
+    so a single cell carries all of it, and high-capacity 21700s (5000-6000
+    mAh) are typically rated 8-10 A while high-drain ones (~4200 mAh) manage
+    35-45 A. Guessing picks the wrong cell; this measures.
+
+    Full thrust on every axis at once, lights at 100, for `total` seconds,
+    printing a line every `every` seconds. Then neutral and disarm.
+
+    IN A BUCKET, TETHER IN HAND. This is the most violent thing the script
+    can do -- five thrusters at 100% for half a minute."""
+    import select, struct
+    global LIGHTS
+    try:
+        sock = bind_udp(MAVLINK_PORT)
+    except OSError as e:
+        say(f"Cannot bind UDP {MAVLINK_PORT}: {e}")
+        for line in port_holder(MAVLINK_PORT).splitlines():
+            say("   " + line)
+        return 1
+    sock.settimeout(1.0)
+    claim_control()
+
+    say(f"waiting for the drone on UDP {MAVLINK_PORT} ...")
+    peer, tgt_sys, tgt_comp = None, 0, 0
+    t0 = time.time()
+    while peer is None and time.time() - t0 < 15:
+        try:
+            data, addr = sock.recvfrom(4096)
+        except socket.timeout:
+            continue
+        h = mav_hdr(data)
+        if not h:
+            continue
+        peer = addr
+        if h["msgid"] == 0:
+            tgt_sys, tgt_comp = h["sysid"], h["compid"]
+    if peer is None:
+        say("Nothing arrived. Is the drone powered and the firewall down?")
+        return 1
+
+    LIGHTS = 100
+    hb = Heartbeat(sock, peer).start()
+    # Without this the vehicle sends almost nothing: every SR0_* rate is 0.
+    seq0 = request_streams(sock, peer, tgt_sys, tgt_comp, rate=5)
+    say("  asked for telemetry streams at 5 Hz (they default to off)")
+    time.sleep(1.0)
+    say("")
+    say("  GCS heartbeat up. Arming in 2s, then FULL POWER on every axis.")
+    say("  IN A BUCKET, TETHER IN HAND.")
+    time.sleep(2.0)
+
+    seq = seq0 & 0xFF
+    sock.sendto(set_mode(19, tgt_sys, seq), peer); seq += 1
+    time.sleep(0.3)
+    sock.sendto(arm_disarm(True, tgt_sys, tgt_comp, seq), peer); seq += 1
+    time.sleep(0.5)
+
+    # Every driven axis hard over at once. Deliberately not neutral on any of
+    # them: the question is what the WHOLE vehicle pulls, not one thruster.
+    full = {4: PWM_MAX, 2: PWM_MAX, 3: PWM_MAX, 0: PWM_MAX, 1: PWM_MAX}
+    frame = rc_frame(100, full)
+    say(f"  frame: " + " ".join(f"ch{i}={v}" for i, v in enumerate(frame)))
+    say("")
+    say(f"  {'t':>4}  id  {'volts':>7}  {'amps':>7}  {'watts':>7}  {'used':>9}  batt")
+    say(f"  {'-'*4}  --  {'-'*7}  {'-'*7}  {'-'*7}  {'-'*9}  ----")
+    # One line every `every` seconds, so a 30s run gives six.
+
+    # Per battery id. There are TWO: id 0 and id 1, one in the buoy and one in
+    # the ROV. Keeping a single set of readings meant whichever message
+    # arrived last won, so a run could report the buoy's battery -- which does
+    # not sag when the thrusters load up. The app averages them; here they are
+    # kept apart, because the whole point is to see which one moves.
+    batts = {}
+    peak_a = None
+    rows = []
+    armed_seen = False
+    seen_147 = 0
+    start, last_tx, next_report = time.time(), 0.0, time.time() + every
+    try:
+        while time.time() - start < total:
+            now = time.time()
+            if now - last_tx >= 0.025:
+                sock.sendto(rc_override(frame, tgt_sys, tgt_comp, seq), peer)
+                seq = (seq + 1) & 0xFF
+                last_tx = now
+            if select.select([sock], [], [], 0.005)[0]:
+                try:
+                    data, _ = sock.recvfrom(4096)
+                except OSError:
+                    continue
+                # EVERY frame in the datagram, not just the first. The drone
+                # packs several messages into one UDP packet, and reading only
+                # the leading header made the 2026-08-25 run report six empty
+                # rows: HEARTBEAT came first so arming registered, and the
+                # BATTERY_STATUS behind it was never seen.
+                for msgid, pl in mav_frames(data):
+                    if msgid == 147 and len(pl) >= 36:
+                        consumed, = struct.unpack_from("<i", pl, 0)
+                        cells = struct.unpack_from("<10H", pl, 10)
+                        amps_raw, = struct.unpack_from("<h", pl, 30)
+                        bid = pl[32]
+                        rem = struct.unpack_from("<b", pl, 35)[0]
+                        pack = sum(c for c in cells if c not in (0, 0xFFFF))
+                        b = batts.setdefault(bid, {"volts": None, "amps": None,
+                                                   "mah": None, "pct": None,
+                                                   "n": 0, "peak": None})
+                        b["n"] += 1
+                        if cells[0] not in (0, 0xFFFF):
+                            b["volts"] = (pack if pack > 5000 else cells[0]) / 1000.0
+                        if amps_raw not in (-1, 0x7FFF):
+                            a = abs(amps_raw / 100.0)   # discharge is negative here
+                            b["amps"] = a
+                            # max() against None would have hidden a negative
+                            # reading; an initial 0.0 did exactly that on the
+                            # 2026-08-25 run, where -0.28 A never became a peak
+                            # and the summary then claimed current was -1.
+                            b["peak"] = a if b["peak"] is None else max(b["peak"], a)
+                            peak_a = a if peak_a is None else max(peak_a, a)
+                        if consumed != -1:
+                            b["mah"] = consumed
+                        b["pct"] = rem
+                        seen_147 += 1
+                    elif msgid == 0 and len(pl) >= 7 and pl[6] & 0x80:
+                        armed_seen = True
+            if now >= next_report:
+                next_report += every
+                t = round(now - start)
+                if not batts:
+                    say(f"  {t:>3}s   no BATTERY_STATUS yet")
+                for bid in sorted(batts):
+                    b = batts[bid]
+                    v, a = b["volts"], b["amps"]
+                    w = (v * a) if (v is not None and a is not None) else None
+                    rows.append((t, bid, v, a, w, b["mah"], b["pct"]))
+                    say(f"  {t:>3}s  id{bid}"
+                        + (f"  {v:7.2f}" if v is not None else f"  {'--':>7}")
+                        + (f"  {a:7.2f}" if a is not None else f"  {'--':>7}")
+                        + (f"  {w:7.0f}" if w is not None else f"  {'--':>7}")
+                        + (f"  {b['mah']:>5} mAh" if b["mah"] is not None else f"  {'--':>9}")
+                        + (f"  {b['pct']:>3}%" if b["pct"] is not None else "   --"))
+    except KeyboardInterrupt:
+        say("  interrupted")
+    finally:
+        for i in range(20):
+            sock.sendto(rc_override(rc_frame(100), tgt_sys, tgt_comp, seq), peer)
+            seq = (seq + 1) & 0xFF
+            time.sleep(0.025)
+        LIGHTS = 1
+        for i in range(10):
+            sock.sendto(rc_override(rc_frame(100), tgt_sys, tgt_comp, seq), peer)
+            seq = (seq + 1) & 0xFF
+            time.sleep(0.025)
+        sock.sendto(arm_disarm(False, tgt_sys, tgt_comp, seq), peer)
+        hb.stop()
+        say("")
+        say("  neutral, lights off, disarmed.")
+
+    say("")
+    if not armed_seen:
+        say("  WARNING: the drone never reported ARMED, so the thrusters were")
+        say("  probably not running and these numbers are idle draw.")
+    for bid in sorted(batts):
+        b = batts[bid]
+        say(f"  battery id {bid}: {b['n']} messages, "
+            f"peak {b['peak'] if b['peak'] is not None else '--'} A, "
+            f"{b['mah'] if b['mah'] is not None else '--'} mAh used, "
+            f"{b['volts'] if b['volts'] is not None else '--'} V, {b['pct']}%")
+    say("")
+    if seen_147 == 0:
+        say("  No BATTERY_STATUS arrived at all, which is odd -- --telemetry")
+        say("  does receive it. Send the log back.")
+    elif peak_a is None:
+        say(f"  {seen_147} BATTERY_STATUS messages, but current_battery was")
+        say("  always -1: this firmware reports voltage only despite")
+        say("  BATT_MONITOR = 5. A clamp meter on the tether is the fallback.")
+    elif peak_a < 3.0:
+        # What the 2026-08-25 run actually produced: a constant -0.28 A and
+        # 0 mAh consumed, unchanged across 30s of supposed full thrust. A real
+        # sensor moves. This is an unconnected or unscaled sense pin.
+        say(f"  PEAK: {peak_a:.2f} A -- far too low for five thrusters at full.")
+        say("")
+        say("  Almost certainly because the drone is IN AIR. A propeller with")
+        say("  no water to push spins nearly free and draws very little; the")
+        say("  load, and so the current, only appears once it is submerged.")
+        say("  The reading itself is sound -- current_consumed climbs in step")
+        say("  with it, so the sensor is measuring, not stuck.")
+        say("")
+        say("  RUN THIS AGAIN IN WATER. That number is the one the cell choice")
+        say("  depends on, and it cannot be obtained on a bench.")
+    else:
+        peak_w = max((b["peak"] * b["volts"]) for b in batts.values()
+                     if b["peak"] is not None and b["volts"]) if batts else 0
+        say(f"  PEAK: {peak_a:.1f} A" + (f", {peak_w:.0f} W" if peak_w else ""))
+        say("  The pack is 1P, so ONE cell must deliver that.")
+        say("")
+        if peak_a < 10:
+            say("  -> under 10 A: a high-capacity 21700 (5000-6000 mAh, rated")
+            say("     8-10 A) is safe, and buys roughly 50% more runtime.")
+        elif peak_a < 20:
+            say("  -> 10-20 A: high-capacity cells would be run past their")
+            say("     rating. A high-drain 21700 (Molicel P42A, Samsung 30T,")
+            say("     ~4200 mAh at 35-45 A) is the safer choice.")
+        else:
+            say("  -> over 20 A: high-drain cells only, and worth re-checking")
+            say("     that the stock pack really is 1P.")
+    log(f"   maxpower: peak={peak_a}A rows={rows} armed={armed_seen} batts={ {k: v for k, v in batts.items()} }")
+    return 0
+
 def lights_only(seconds=4.0):
     """Set the headlights and exit. No daemon, no second terminal.
 
@@ -2585,8 +2836,15 @@ def telemetry_loop(stop=None, quiet_start=False):
         return 1
     sock.settimeout(1.0)
     if not quiet_start:
-        say(f"listening for telemetry on UDP {MAVLINK_PORT} — ctrl-C to stop")
-    dbg(f"telemetry bound 0.0.0.0:{MAVLINK_PORT}, sending nothing")
+        say(f"listening for telemetry on UDP {MAVLINK_PORT} — ctrl-C to stop"
+            + (f", or {TIMEOUT:g}s" if TIMEOUT else " (--timeout N to bound it)"))
+    # This used to send nothing at all, on the grounds that listening cannot
+    # disturb the drone. True, but it also meant listening to a vehicle whose
+    # every stream rate is zero: SR0_EXT_STAT 0, SR0_EXTRA2 0. Depth lives in
+    # VFR_HUD, which lives in EXTRA2, which was never turned on. Asking costs
+    # four small packets and no thruster can move as a result.
+    stream_peer = [None]
+    dbg(f"telemetry bound 0.0.0.0:{MAVLINK_PORT}")
 
     state, buf, seen, first = {}, b"", 0, time.time()
     hist, last_dbg = {}, 0.0
@@ -2605,6 +2863,16 @@ def telemetry_loop(stop=None, quiet_start=False):
                     return 1
                 continue
             buf = b"".join([buf, data])
+            # First packet in tells us where to ask. Streams default to off on
+            # this vehicle, so without this the readout waits for messages the
+            # drone was never going to send.
+            if stream_peer[0] is None and addr:
+                stream_peer[0] = addr
+                h0 = mav_hdr(data)
+                ts, tc = (h0["sysid"], h0["compid"]) if h0 else (0, 0)
+                request_streams(sock, addr, ts, tc, rate=4)
+                if not quiet_start:
+                    say("asked for telemetry streams (they default to off)")
             for msgid, payload in mav_frames(buf):
                 seen += 1
                 hist[msgid] = hist.get(msgid, 0) + 1
@@ -2616,18 +2884,54 @@ def telemetry_loop(stop=None, quiet_start=False):
                     state["raw_alt"] = alt
                     state["heading"] = heading
                 elif msgid == 147 and len(payload) >= 36:   # BATTERY_STATUS
-                    rem = struct.unpack_from("<b", payload, 35)[0]
-                    cell, = struct.unpack_from("<H", payload, 10)
+                    # Wire layout, in MAVLink's size-sorted order:
+                    #   0  current_consumed   int32   mAh
+                    #   4  energy_consumed    int32   hJ
+                    #   8  temperature        int16   cdegC
+                    #  10  voltages[10]       uint16  mV per cell
+                    #  30  current_battery    int16   cA, -1 = not measured
+                    #  32  id                 uint8
+                    #  33  battery_function   uint8
+                    #  34  type               uint8
+                    #  35  battery_remaining  int8    %
+                    consumed, = struct.unpack_from("<i", payload, 0)
+                    cells = struct.unpack_from("<10H", payload, 10)
+                    amps_raw, = struct.unpack_from("<h", payload, 30)
                     bid = payload[32]
+                    rem = struct.unpack_from("<b", payload, 35)[0]
                     state["raw_batt"] = rem
+                    # BATT_MONITOR 5 means voltage AND current are measured,
+                    # so current_battery is real rather than the -1 that a
+                    # voltage-only setup reports. This is the number that says
+                    # what a replacement cell has to be able to deliver: the
+                    # pack is 1P, so one cell carries all of it.
+                    if amps_raw not in (-1, 0x7FFF):
+                        # Magnitude, not sign. This firmware reports discharge
+                        # as NEGATIVE: -1.06 A while current_consumed climbed
+                        # 48 -> 56 mAh over the same thirty seconds, which is
+                        # about 1 A. The sensor is live; only the convention
+                        # is inverted.
+                        amps = abs(amps_raw / 100.0)
+                        state["amps"] = amps
+                        # Starting the peak at 0.0 meant a negative reading
+                        # never beat it, and the summary then claimed no
+                        # current had arrived while printing one.
+                        prev = state.get("amps_peak")
+                        state["amps_peak"] = amps if prev is None else max(prev, amps)
+                    if consumed not in (-1, 0):
+                        state["mah"] = consumed
+                    pack = sum(c for c in cells if c not in (0, 0xFFFF))
                     dbg(f"BATTERY_STATUS id={bid} raw_remaining={rem}% "
-                        f"cell0={cell}mV -> shown {0.0 if rem <= 15 else ((rem-15)/85.0)*100:.0f}%")
+                        f"cells={[c for c in cells if c not in (0, 0xFFFF)]}mV "
+                        f"current={amps_raw}cA consumed={consumed}mAh")
                     # The app rescales so firmware 15% reads as 0%
                     # match it so the number agrees with the
                     # vendor app rather than quietly disagreeing.
                     state[f"batt{bid}"] = 0.0 if rem <= 15 else ((rem - 15) / 85.0) * 100.0
-                    if cell not in (0, 0xFFFF):
-                        state["volts"] = cell / 1000.0
+                    if cells[0] not in (0, 0xFFFF):
+                        # The first entry is cell 0 on some builds and the whole
+                        # pack on others; 12.22 V on a 3S pack said pack here.
+                        state["volts"] = (pack if pack > 5000 else cells[0]) / 1000.0
             buf = b""
             if DEBUG and time.time() - last_dbg > 5:
                 last_dbg = time.time()
@@ -2640,6 +2944,13 @@ def telemetry_loop(stop=None, quiet_start=False):
                     bits.append(f"batt{k[4:]} {state[k]:3.0f}%")
                 if "volts" in state:
                     bits.append(f"{state['volts']:.2f} V")
+                if "amps" in state:
+                    bits.append(f"{state['amps']:5.1f} A")
+                    bits.append(f"peak {state['amps_peak']:5.1f} A")
+                    if state.get("volts"):
+                        bits.append(f"{state['volts'] * state['amps']:5.0f} W")
+                if "mah" in state:
+                    bits.append(f"{state['mah']}mAh used")
                 if "heading" in state:
                     bits.append(f"hdg {state['heading']:3d}\u00b0")
                 print("  " + "   ".join(bits) + "        ", end="\r", flush=True)
@@ -2647,6 +2958,15 @@ def telemetry_loop(stop=None, quiet_start=False):
         pass
     finally:
         print()
+        if state.get("amps_peak") is not None:
+            say(f"  peak current seen: {state['amps_peak']:.2f} A"
+                + (f"  ({state['amps_peak'] * state['volts']:.0f} W)"
+                   if state.get("volts") else ""))
+            say("  The pack is 1P, so one cell has to deliver all of that.")
+        elif seen:
+            say("  No current reading arrived (current_battery was -1), so this")
+            say("  firmware reports voltage only despite BATT_MONITOR = 5.")
+        say(f"  log: {LOGPATH}")
         log(f"   telemetry: {seen} messages, last state {state}")
     return 0
 
@@ -2975,6 +3295,14 @@ if DIAGNOSE:
     session = open_session()
     try:
         sys.exit(diagnose())
+    finally:
+        if session:
+            session.stop()
+
+if MAXPOWER:
+    session = open_session()
+    try:
+        sys.exit(maxpower(TIMEOUT or 30.0))
     finally:
         if session:
             session.stop()

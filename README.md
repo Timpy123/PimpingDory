@@ -369,22 +369,23 @@ Worth establishing, in this order, and none of it needs the vehicle armed:
 and the vendor app is the only official way back. Read parameters first, keep a
 full dump, and treat writing anything as a separate decision.
 
-## Depth never arrives
+## Depth — solved 2026-08-25
 
-`--telemetry` shows battery (`94%, 12.22V`) but depth stays `None`. **`VFR_HUD`
-(msg 74) is never sent at all**, and that is the message depth is supposed to
-come from. The message ids actually arriving are `{24: 143, 0: 18, 253: 4,
-147: 4}` — msg 24 is `GPS_RAW_INT` and is 80% of the traffic, which is odd for
-something underwater and is the obvious place to look.
+It was never a missing sensor. **Every telemetry stream rate on the vehicle is
+zero** — the parameter dump shows `SR0_EXT_STAT 0`, `SR0_EXTRA1 0`,
+`SR0_EXTRA2 0`, `SR0_POSITION 0` — so it streams nothing unless asked. Depth
+rides in `VFR_HUD`, which lives in the EXTRA2 stream, which was off.
 
-The parameter dump adds a candidate explanation: **`SURFACE_DEPTH` is -10**,
-so the vehicle treats anything shallower than 10 cm as "at the surface", and
-every test so far has been in air. `STATUSTEXT` saying `Surfaced` on every run
-fits that exactly. It may simply not report a depth it does not have.
+The script now sends `REQUEST_DATA_STREAM` for EXTENDED_STATUS, EXTRA1, EXTRA2
+and EXTRA3 at 4–5 Hz as soon as it learns the peer, and depth appears:
 
-Easiest test: run `--telemetry` with the drone actually submerged and see
-whether msg 74 appears. If it does not, depth is coming from somewhere else and
-msg 24 is the candidate.
+```
+depth   0.12 m   batt0  99%   12.35 V   -0.3 A   64mAh used   hdg 197°
+```
+
+The same fix explains the sparse battery data: one `BATTERY_STATUS` in a
+thirty-second run was not a slow sensor, it was a stream nobody had started.
+With the request in place it arrives at 5 Hz.
 
 ## Windows — never run on Windows at all
 
