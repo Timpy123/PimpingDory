@@ -403,8 +403,9 @@ Hardware. None of this is started.
 1. **1/4 inch female sockets on the hull** for mounting a light rig — the
    standard 1/4"-20 tripod thread, so anything off the shelf fits.
 
-2. **Light rig** — aluminium frame, 1/4 inch bolts and nuts, two **Workkus
+2. **Light rig** — aluminium frame, 1/4 inch bolts and nuts, two **Wurkkos
    DL07** lights, with closed-cell PVC for buoyancy to offset the added mass.
+   Parts listed below.
 
 3. **Battery** — replace the cells in the **19386-EE-1P3S21700** pack.
    Candidates:
@@ -427,3 +428,11 @@ Hardware. None of this is started.
    REST API has `GET /v1/tfcard/sdquery` and `POST /v1/tfcard/format` — "tfcard"
    is TransFlash, the old name for microSD, which is a hint that it is a card
    rather than eMMC. `--list` already reports what the API says about capacity.
+
+## Tools and parts
+
+| what | for | where |
+|---|---|---|
+| **T6H screwdriver set** | removing the cover | [amazon.nl B0CZDN9Q1R](https://www.amazon.nl/dp/B0CZDN9Q1R?ref=ppx_yo2ov_dt_b_fed_asin_title) |
+| **1/4 inch thread adapters** | mounting the flashlights to the arm — the standard 1/4"-20 tripod thread | [amazon.nl B0DCGCCXQC](https://www.amazon.nl/dp/B0DCGCCXQC?ref=ppx_yo2ov_dt_b_fed_asin_title) |
+| **Wurkkos DL07 diving flashlight** ×2 | the light rig | [wurkkos.com](https://wurkkos.com/products/wurkkos-dl07-diving-flashlight?VariantsId=12525) |
