@@ -35,7 +35,7 @@ Every one of these has been run against a real drone.
 | `--telemetry` | battery and voltage | 2026-08-24 |
 | `--lights on` / `off` / `N` | headlights, 1–100 | 2026-08-25 |
 | `--netcode` | just the handshake, and report | 2026-08-24 |
-| `--control` | drive the thrusters from the keyboard | 2026-08-25, all axes made motor noise |
+| `--control` | drive the thrusters from the keyboard | 2026-08-25, arms and drives every axis |
 | `--daemon` + `--send` | hold the link open, send commands to it | 2026-08-25 |
 
 Copy-pasteable, no trailing comments:
@@ -101,7 +101,8 @@ if it is not already running:
 |---|---|
 | `--video ./dive.mp4` | records alongside the live picture; a playable file has not been confirmed |
 | `--telemetry` depth | battery works, **depth is always `None`** — see below |
-| `--control` directions | the thrusters run; which one each key drives is unknown |
+| `--control` directions | it arms and every axis runs; which thruster each slot turns has not been watched in water |
+| `--sweep` | all ten axes drove cleanly on 2026-08-25; only the physical result is unconfirmed |
 
 ### Diagnostics
 
@@ -289,16 +290,21 @@ vertical) — and **nothing drove slot 4 at all**, the one axis that actually
 moves the drone forwards. That is why the earlier sweeps made motor noise
 without obviously going anywhere.
 
-**Still to do:** watch it. The mapping is derived from the firmware's own
-parameters, not from seeing the drone move.
+**The control path itself is proven.** The last sweep (2026-08-25) armed
+cleanly — `COMMAND_ACK 11 ACCEPTED` for the mode, `400 ACCEPTED` for the arm,
+then `ARMED` — and drove all ten axes for 8s each, 3388 RC frames and 121
+heartbeats over two minutes with no dropout. What is *not* proven is which
+thruster each slot turns, because that can only be seen, not logged.
+
+**Still to do:** watch it in water.
 
 ```sh
 sudo -v && ./scripts/DoryTest.sh --sweep
 ```
 
-Ten axes, 8s each with 3s gaps, arming and disarming itself. In a bucket
-with the tether in hand. If forward really is forward, the table above is
-correct and this section can go.
+Ten axes, 8s each with 3s gaps, arming and disarming itself, announcing each
+axis as it starts. In a bucket with the tether in hand. If `forward` goes
+forward and `up` rises, the table above is right and this section goes.
 
 One thing to expect: **pitch is inverted** — the app sends `3000 - value` on
 that channel.
@@ -370,6 +376,11 @@ full dump, and treat writing anything as a separate decision.
 come from. The message ids actually arriving are `{24: 143, 0: 18, 253: 4,
 147: 4}` — msg 24 is `GPS_RAW_INT` and is 80% of the traffic, which is odd for
 something underwater and is the obvious place to look.
+
+The parameter dump adds a candidate explanation: **`SURFACE_DEPTH` is -10**,
+so the vehicle treats anything shallower than 10 cm as "at the surface", and
+every test so far has been in air. `STATUSTEXT` saying `Surfaced` on every run
+fits that exactly. It may simply not report a depth it does not have.
 
 Easiest test: run `--telemetry` with the drone actually submerged and see
 whether msg 74 appears. If it does not, depth is coming from somewhere else and
