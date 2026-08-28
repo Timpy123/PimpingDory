@@ -478,6 +478,12 @@ bit will not reach it.
 [This video](https://www.youtube.com/watch?v=_ONTOr11_d4) covers most of the
 part replacements.
 
+## 3D printed parts
+
+| what | for | where |
+|---|---|---|
+| **Wifi Buoy Tether Loop** by rsoko | securing the buoy with a tether — clips on for a leash | [thingiverse thing:4031565](https://www.thingiverse.com/thing:4031565/files) |
+
 ## Tools and parts
 
 | what | for | where |
