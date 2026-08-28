@@ -484,6 +484,7 @@ part replacements.
 |---|---|---|
 | **T6H bit set, 50 mm shaft** | the security screw — the long shaft is the point | [amazon.nl B0GXNLXH3R](https://www.amazon.nl/-/en/gp/product/B0GXNLXH3R/ref=ewc_pr_img_1) |
 | **T6H screwdriver set** | the cover screws | [amazon.nl B0CZDN9Q1R](https://www.amazon.nl/dp/B0CZDN9Q1R?ref=ppx_yo2ov_dt_b_fed_asin_title) |
+| **Connector release tool** | unplugging the wire connectors from the compute module | [amazon.nl B0FMR3Q7K2](https://www.amazon.nl/-/en/gp/product/B0FMR3Q7K2/ref=ewc_pr_img_1?th=1) |
 | **ST2.2 × 6.5 screws**, DIN 7983 TX, A4 | replacing the cover screws | [rvspaleis.nl](https://www.rvspaleis.nl/plaatschroeven/din-7983-tx/din-7983tx-[-]-a4-[-]-2,2/7983-4-2.2x6.5tx_1) |
 | **Flat aluminium profile**, 20 × 2 × 2000 mm | the light-rig arm | [gamma.nl B175328](https://www.gamma.nl/assortiment/profiel-plat-aluminium-brut-20x2x2000mm/p/B175328) |
 | **1/4 inch thread adapters** | mounting the flashlights to the arm — the standard 1/4"-20 tripod thread | [amazon.nl B0DCGCCXQC](https://www.amazon.nl/dp/B0DCGCCXQC?ref=ppx_yo2ov_dt_b_fed_asin_title) |
