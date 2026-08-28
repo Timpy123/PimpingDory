@@ -430,11 +430,26 @@ Hardware. None of this is started.
    is TransFlash, the old name for microSD, which is a hint that it is a card
    rather than eMMC. `--list` already reports what the API says about capacity.
 
+## Opening it
+
+The cover is held by **ST2.2 × 6.5** self-tapping screws — DIN 7983 TX, A4
+stainless. [rvspaleis.nl](https://www.rvspaleis.nl/plaatschroeven/din-7983-tx/din-7983tx-[-]-a4-[-]-2,2/7983-4-2.2x6.5tx_1)
+sells them, so replacements are available.
+
+There is also **one Torx security screw**, which needs a **T6H** bit — the
+pin-in-Torx variant — **on a 50 mm shaft**. The shaft length matters: a stubby
+bit will not reach it.
+
+[This video](https://www.youtube.com/watch?v=_ONTOr11_d4) covers most of the
+part replacements.
+
 ## Tools and parts
 
 | what | for | where |
 |---|---|---|
-| **T6H screwdriver set** | removing the cover | [amazon.nl B0CZDN9Q1R](https://www.amazon.nl/dp/B0CZDN9Q1R?ref=ppx_yo2ov_dt_b_fed_asin_title) |
-| **Flat aluminium profile**, 20 × 2 × 2000 mm | the arm itself | [gamma.nl B175328](https://www.gamma.nl/assortiment/profiel-plat-aluminium-brut-20x2x2000mm/p/B175328) |
+| **T6H bit set, 50 mm shaft** | the security screw — the long shaft is the point | [amazon.nl B0GXNLXH3R](https://www.amazon.nl/-/en/gp/product/B0GXNLXH3R/ref=ewc_pr_img_1) |
+| **T6H screwdriver set** | the cover screws | [amazon.nl B0CZDN9Q1R](https://www.amazon.nl/dp/B0CZDN9Q1R?ref=ppx_yo2ov_dt_b_fed_asin_title) |
+| **ST2.2 × 6.5 screws**, DIN 7983 TX, A4 | replacing the cover screws | [rvspaleis.nl](https://www.rvspaleis.nl/plaatschroeven/din-7983-tx/din-7983tx-[-]-a4-[-]-2,2/7983-4-2.2x6.5tx_1) |
+| **Flat aluminium profile**, 20 × 2 × 2000 mm | the light-rig arm | [gamma.nl B175328](https://www.gamma.nl/assortiment/profiel-plat-aluminium-brut-20x2x2000mm/p/B175328) |
 | **1/4 inch thread adapters** | mounting the flashlights to the arm — the standard 1/4"-20 tripod thread | [amazon.nl B0DCGCCXQC](https://www.amazon.nl/dp/B0DCGCCXQC?ref=ppx_yo2ov_dt_b_fed_asin_title) |
-| **Wurkkos DL07 diving flashlight** ×2 | the light rig | [wurkkos.com](https://wurkkos.com/products/wurkkos-dl07-diving-flashlight?VariantsId=12525) |
+| **Wurkkos DL07 diving flashlight** ×2, 1 × 26650 each | the light rig | [wurkkos.com](https://wurkkos.com/products/wurkkos-dl07-diving-flashlight?VariantsId=12525) |
