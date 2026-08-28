@@ -343,27 +343,62 @@ Values worth knowing, all from the dump:
 `media/params.txt` holds the lot. **Keep it** — it is the only record of how
 this vehicle is configured, and there is no way to recover it.
 
+### The flight controller
+
+**The board is not identifiable from software.** `AUTOPILOT_VERSION` comes back
+with board, vendor and product ids **all zero**, and `BRD_SERIAL_NUM` is 0 too,
+so there is no model or serial to read. Only opening it would answer that.
+
+What the parameters do establish:
+
+- **Pixhawk-class hardware.** The `BRD_*` set — `BRD_PWM_COUNT`,
+  `BRD_SER1_RTSCTS`, `BRD_SAFETYENABLE`, `BRD_CAN_ENABLE` — is the PX4/Pixhawk
+  HAL, so it is that family or a clone of it, not an APM or a bespoke stack.
+- **Six PWM outputs.** `BRD_PWM_COUNT = 6`, and of the aux channels only
+  `RC6_FUNCTION = 56` is set, which is RCIN6 pass-through. So outputs **1–5 are
+  the five thrusters and output 6 is the light**, driven straight from RC
+  channel 6. That is independent confirmation of the light being on channel
+  index 5, arrived at from a completely different parameter.
+- **Compass**: `COMPASS_DEV_ID = 68873` decodes to I²C bus 1, address `0x0D`,
+  devtype `0x01` — an HMC5883/QMC5883-class magnetometer, the commodity part.
+
+### The ESCs
+
+**Nothing, and that is expected rather than a gap.**
+
+```
+RC_SPEED   490      plain PWM at 490 Hz
+```
+
+There is no `MOT_PWM_TYPE`, no `ESC_*` parameters and no ESC telemetry. These
+are dumb PWM output stages: they receive a pulse width and report nothing back.
+No protocol exists by which the firmware could know what they are, so neither
+can we. Physical inspection is the only route.
+
+It also means no DShot or OneShot — anything expecting bidirectional ESC
+telemetry, RPM feedback or per-motor current has nothing to talk to.
+
 ## Can it be reflashed?
 
 **Unknown, and untried. Do not attempt without a recovery path.**
 
 Worth establishing, in this order, and none of it needs the vehicle armed:
 
-1. **What it says it is.** `AUTOPILOT_VERSION` (msg 148) via
-   `COMMAND_LONG`/`MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES` (520) would give
-   flight-sw version, board type and capability flags. The app already reads a
-   version field it never displays, so the vehicle answers something.
-2. **Which parameters exist.** `PARAM_REQUEST_LIST` (21) dumps every parameter
-   with its name. Stock ArduSub names (`FRAME_CONFIG`, `SERVO*_FUNCTION`,
-   `BRD_*`) would settle the question in one packet dump, and the parameter set
-   is also what a reflash would have to preserve.
+1. ~~**What it says it is.**~~ **Done** — `./scripts/DoryTest.sh --identify`.
+   It answers `AUTOPILOT_VERSION`, but with board, vendor and product ids all
+   zero, so the board is not identified. See above.
+2. ~~**Which parameters exist.**~~ **Done** — all 588 are in
+   `media/params.txt`, and they say ArduSub. That file is what a reflash would
+   have to preserve.
 3. **Where the firmware lives.** The buoy is a Linux box with SSH on the ROV at
    `192.168.1.88` (see Dead ends). The flight controller is a separate MCU
    behind it, so any reflash is likely *through* the buoy, not directly.
-4. **Whether there is a stock target at all.** ArduSub builds are per-board. If
-   the board is a Chasing design rather than a Pixhawk variant, there may be no
-   upstream build that runs on it, and the thruster mapping and the light
-   channel would be lost even if one did.
+4. **Whether there is a stock target at all.** ArduSub builds are per-board,
+   and this one does not report which board it is. The `BRD_*` set says
+   Pixhawk-family, which is promising, but "Pixhawk-family" is not a build
+   target — the exact variant matters and is unknown. Even with a match, the
+   thruster mapping and the light on output 6 are Chasing's own and would be
+   lost.
 
 **The realistic risk:** an underwater drone with no recovery path is a brick,
 and the vendor app is the only official way back. Read parameters first, keep a
