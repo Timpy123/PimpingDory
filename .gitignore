@@ -17,6 +17,14 @@ dory.sock
 
 .DS_Store
 claude.sh
+
+# Not in git yet. Each of these is its own project with its own working files;
+# they go in when they are ready, not before.
+MetalDetector/
+
+# Loose originals — the copies that matter live in their upgrade folder.
+IMG_*.jpg
+computepluglayout.png
 CLAUDE.md
 scripts/.firewall_was_on
 app/REFERENCE.md

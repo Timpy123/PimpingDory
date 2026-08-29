@@ -437,74 +437,40 @@ or a VPN up, the localised `netsh wlan` output, and `curl -C -` resume.
 
 ## Updates/Upgrades TODO
 
-Hardware. None of this is started.
+Hardware. **Each upgrade has its own folder**, with its notes, photos and
+working files in it. None of it is finished.
 
-1. **1/4 inch female sockets on the hull** for mounting a light rig — the
-   standard 1/4"-20 tripod thread, so anything off the shelf fits.
+| upgrade | folder | state |
+|---|---|---|
+| **Light rig** — two Wurkkos DL07 lights on an aluminium arm clamped to the hull, plus 1/4" sockets in the hull and foam to offset the mass | [`LightRig/`](LightRig/) | strap contour taken, aluminium trial fitted |
+| **Battery** — recell the 1P3S 21700 pack | [`BatteryUpgrade/`](BatteryUpgrade/) | blocked on measuring peak current in water |
+| **Motors** — more powerful thrusters | [`MotorUpgrade/`](MotorUpgrade/) | layout and drive understood, nothing ordered |
+| **Camera** — higher resolution | [`CameraUpgrade/`](CameraUpgrade/) | not started |
+| **Storage** — is the 16 GB an SD card, and can it be `dd`'d bigger | [`StorageUpgrade/`](StorageUpgrade/) | not started |
+| **Metal detector** — a self-contained pulse-induction pod that reports into the camera's view | `MetalDetector/` | own project, own plan, firmware and KiCad under way. **Not in this repo yet** |
 
-2. **Light rig** — aluminium frame, 1/4 inch bolts and nuts, two **Wurkkos
-   DL07** lights, with closed-cell PVC for buoyancy to offset the added mass.
-   Parts listed below, and the strap is under way — see *Building the light
-   rig*.
+### Metal detector
 
-3. **Battery** — replace the cells in the **19386-EE-1P3S21700** pack.
-   Candidates:
-   - **Vapcell 21700 Li-Ion**
-   - **Keeppower 21700 6000 mAh**
+The most developed of these and the only one with its own build plan, firmware
+and board layout. It is a **self-contained pod**: own 18650, no data connection
+to the drone at all, reporting optically with a WS2812 strip and a small OLED
+placed in the camera's own view — the same channel Chasing's stock detector
+uses. That sidesteps the integration problem entirely, because there is no
+spare channel to take a signal up the tether: plugs 1–5 are thrusters, 6 the
+breathing light, 9 the LEDs, and 7–8 the tether pair.
 
-   The pack is 1P3S: three cells in series, one parallel string.
+Pulse induction rather than VLF, because PI is largely indifferent to water,
+salt and mineralisation. Target is a coin-sized non-ferrous object at 15–30 cm,
+against about 4 cm for the stock detector.
 
-4. **Motors** — replace with more powerful ones. Five thrusters as standard.
-
-5. **Camera** — replace with a higher-resolution one. Standard is 1080p30
-   H.264 video and 1920x1080 stills.
-
-6. **Storage** — open the buoy and see whether the 16 GB is an SD card on the
-   board or soldered eMMC. If it is a card, `dd` it onto a bigger one and see
-   whether the firmware accepts the result.
-
-   Useful to know before opening anything: the manual (p.9) lists
-   `STORAGE 16G` under BUOY, not DRONE, so the buoy is the thing to open. The
-   REST API has `GET /v1/tfcard/sdquery` and `POST /v1/tfcard/format` — "tfcard"
-   is TransFlash, the old name for microSD, which is a hint that it is a card
-   rather than eMMC. `--list` already reports what the API says about capacity.
+Kept in `MetalDetector/` and gitignored for now — it is its own project with
+its own working files and its own Claude session.
 
 ## Building the light rig
 
-Rather than a printed ring, the arm mounts on a **strap bent from thin
-aluminium** that follows the hull's top contour, with a flat tab at each end
-carrying a hole for a 1/4"-20 stud. A matching strap underneath and threaded
-rod down each side clamp the hull between them; the lights then mount on the
-studs.
-
-**1. The contour to build against**, laid against a centimetre rule:
-
-![Contour against a centimetre scale](reference/lightrig-1-contour.jpg)
-
-The profile runs from roughly the 9.5 cm to the 33.5 cm mark, so about
-**240 mm of developed length** — more than the hull's 188 mm width, because
-the strap follows the curve rather than crossing it. Read off the photo, so
-treat it as approximate. The shape is a raised centre with a step down each
-shoulder, then flat tabs.
-
-**2. Where the threaded rods land**, with the template between them:
-
-![Template with the threaded rods positioned](reference/lightrig-2-rod-positions.jpg)
-
-Two contours here, top and bottom, with a rod at each side — the pair of straps
-and the studs that join them.
-
-**3. Trial fit in thin aluminium:**
-
-![Aluminium strap trial-fitted on the drone](reference/lightrig-3-fitted.jpg)
-
-Sitting behind the top thruster duct, tabs clear of the hull, holes ready for
-the studs.
-
-**What the strap must clear**, from the callouts in the manual: the camera and
-LED lights on the front face, the flash light on top, the drain and vent holes,
-and the thruster intakes. In the photo it sits between the top duct and the two
-side ducts, which is the gap available.
+Moved to [`LightRig/`](LightRig/) — the contour taken against a centimetre
+rule, where the threaded rods land, and the aluminium trial fit, with the
+clearances it has to respect.
 
 ## The compute module plugs
 
