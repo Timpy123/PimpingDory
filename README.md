@@ -279,10 +279,13 @@ Commands are named for what they do, so `--send "up 2"` ascends. The arrow keys
 in `--control` follow the joystick convention instead — pushing the stick away
 from you is forwards — which is why ↑ is forward there and `w` is up.
 
-Two independent confirmations: `FRAME = 1` is ArduSub's VECTORED frame, and the
+Three independent confirmations: `FRAME = 1` is ArduSub's VECTORED frame; the
 vendor app has a dial whose button logs "Pitch = 0" and sends exactly channel
-index 1 — ArduSub's pitch channel. If one channel lands where ArduSub says it
-should, the rest follow.
+index 1 — ArduSub's pitch channel; and the compute module's plug layout (see
+below) names the five thrusters as two horizontal and three vertical, with **no
+lateral thruster at all**. That last one is why channel 5 was free to become
+the lights: in stock ArduSub it is *lateral*, and this hull has nothing to
+connect it to.
 
 **The old guesses were wrong in a way that mattered.** Slot 0 was labelled
 "fwd/back" (it is roll), slot 1 "vertical" (it is pitch), slot 2 "pitch" (it is
@@ -464,6 +467,49 @@ Hardware. None of this is started.
    REST API has `GET /v1/tfcard/sdquery` and `POST /v1/tfcard/format` — "tfcard"
    is TransFlash, the old name for microSD, which is a hint that it is a card
    rather than eMMC. `--list` already reports what the API says about capacity.
+
+## The compute module plugs
+
+![Compute module plug layout](reference/computepluglayout.png)
+
+Transcribed from the diagram:
+
+| plug | goes to |
+|---|---|
+| **1** | Motor — **Left Vertical Thruster** |
+| **2** | Motor — **Left Thruster** |
+| **3** | Motor — **Rear Vertical Thruster** |
+| **4** | Motor — **Right Thruster** |
+| **5** | Motor — **Right Vertical Thruster** |
+| **6** | Breathing Light |
+| **7** | Connector — twisted-pair cable |
+| **8** | Connector — three-colour cable |
+| **9** | LED Lights |
+| 10 | centre of the connector block |
+
+> **Note:** always check if O-rings are damaged and need replacing.
+
+### What this settles about the thruster layout
+
+Five thrusters, and the names give the arrangement outright:
+
+- **two horizontal** — Left and Right
+- **three vertical** — Left Vertical, Right Vertical, Rear Vertical
+
+**There is no lateral thruster**, so the drone cannot strafe sideways. That is
+why channel 5 was free for Chasing to repurpose as the lights: in stock ArduSub
+channel 5 is *lateral*, and this hull has nothing to connect it to.
+
+It also explains how each axis has to be mixed, which matches the ArduSub
+channel assignment derived from the parameters:
+
+| axis | slot | how the thrusters produce it |
+|---|---|---|
+| forward / back | 4 | Left + Right horizontal together |
+| yaw | 3 | Left vs Right horizontal, differentially |
+| vertical | 2 | all three verticals together |
+| roll | 0 | Left Vertical vs Right Vertical |
+| pitch | 1 | the two front verticals vs the Rear Vertical |
 
 ## Opening it
 
