@@ -16,11 +16,23 @@ dory.sock
 *.pdf
 
 .DS_Store
+
+# Claude's own working files, at any depth — every upgrade folder grows these.
 claude.sh
+.claude/
+.claude-session-backup/
 
 # Not in git yet. Each of these is its own project with its own working files;
 # they go in when they are ready, not before.
 MetalDetector/
+
+# Parked project ideas that aren't part of any current build.
+ArchiveIdeas/
+
+# Scratch folder — the ONLY scratch space for this repo (never /tmp or
+# /private/tmp). Shared by concurrent Claude sessions, so nothing here is
+# deleted without asking first.
+tmp/
 
 # Loose originals — the copies that matter live in their upgrade folder.
 IMG_*.jpg
