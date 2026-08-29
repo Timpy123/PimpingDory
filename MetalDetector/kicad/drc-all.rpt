@@ -1,0 +1,410 @@
+** Drc report for detector-hat.kicad_pcb **
+** Created on 2026-07-19T12:41:42+0200 **
+
+** Found 125 DRC violations **
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(0.0000 mm, 0.0000 mm): Rectangle on Edge.Cuts
+    @(15.8100 mm, 132.3900 mm): Segment of J4 on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(0.0000 mm, 0.0000 mm): Rectangle on Edge.Cuts
+    @(18.4600 mm, 132.3900 mm): Segment of J4 on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(0.0000 mm, 0.0000 mm): Rectangle on Edge.Cuts
+    @(21.0000 mm, 132.3900 mm): Segment of J4 on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(0.0000 mm, 0.0000 mm): Rectangle on Edge.Cuts
+    @(23.5400 mm, 132.3900 mm): Segment of J4 on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(0.0000 mm, 0.0000 mm): Rectangle on Edge.Cuts
+    @(26.1900 mm, 135.1500 mm): Segment of J4 on F.Silkscreen
+[lib_footprint_mismatch]: Footprint 'BatteryHolder_Keystone_1042_1x18650' does not match copy in library 'Battery'.
+    Local override; warning
+    @(21.0000 mm, 73.0000 mm): Footprint BT1
+
+** Found 5 unconnected pads **
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(31.5000 mm, 45.0000 mm): Zone 'GND_F.Cu' [GND] on F.Cu, priority 1
+    @(0.0000 mm, 0.0000 mm): Zone 'GND_B.Cu' [GND] on B.Cu, priority 0
+
+** Found 0 Footprint errors **
+
+** End of Report **

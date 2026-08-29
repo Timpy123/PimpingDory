@@ -1,0 +1,75 @@
+The GND copper is badly fragmented
+
+The saved zone fill resolves into 22 electrically separate GND copper components:
+
+There are zero GND tracks.
+There are zero GND stitching vias.
+The main ground component reaches only 42 of 67 unique GND pad identifiers.
+The remaining ground pads sit on 21 isolated islands.
+
+Examples include:
+
+C18.2 and C19.2
+C1.2
+C20.2 and C6.2
+C12.2
+U6.4
+D10.2 and U7.4
+U8.3
+U8.13
+R24.2, R25.2, and R26.2
+
+These islands need to be joined to the main ground network using revised routing and strategically placed GND vias. Do not rely on internal IC ground connections to join them.
+
+The Power and HV netclasses are not reflected in the routing
+
+The project specifies:
+
+Class	Track	Clearance	Via
+HV_Flyback	0.50 mm	0.60 mm	0.80/0.40 mm
+Power	0.60 mm	0.20 mm	0.80/0.40 mm
+
+But the actual board contains:
+
+All 668 track segments at 0.25 mm
+All 52 vias at 0.60/0.30 mm
+
+Specific problems:
+
+COIL_A is entirely routed at 0.25 mm.
+Its nearest clearance to other signal copper is approximately 0.16 mm.
+Its clearance to the GND pour is approximately 0.30 mm.
+V12_TX, V9_SND, and the VBAT_* nets are also routed at 0.25 mm.
+BAT_NEG, VBUS_C, and VSYS_PICO are not covered by the current Power-class patterns.
+
+The leading / characters in the netclass patterns should also be checked. Whatever the cause, the finished copper plainly does not meet the rules declared by the project.
+
+Several thermal or tab pads have no net
+
+These require datasheet verification:
+
+U8 exposed pad 17 is netless and has no thermal vias.
+Q4, Q5, and Q6 pad 4, the large SOT-223 tab, is netless.
+The corresponding pad 2 nets are DMP0, DMP1, and DMP2.
+
+For many SOT-223 devices the tab is internally the same terminal as pad 2. If that applies here, pad 4 should normally be assigned the same net and provided with appropriate copper for heat spreading.
+
+The USB-C connector is not aligned with its intended board edge
+
+The J3 footprint contains an explicit PCB Edge marker at global Y ≈ 43.88 mm. The actual board edge is at Y = 41.00 mm, an offset of approximately 2.88 mm.
+
+That means PCB material extends into the area the footprint expects to be beyond the board edge. This could obstruct the USB plug or connector shell. The connector should be repositioned or the outline corrected using the manufacturer drawing.
+
+A switching supply trace runs beside the analogue chain
+
+V12_TX contains a single 96.1 mm long, 0.25 mm wide front-layer segment running along the right side of the board.
+
+It passes approximately:
+
+0.15 mm from VREF
+0.29 mm from STG2_IN
+0.70 mm from parts of RX_B and U6_FB
+
+For a detector receiver, placing a long switched-power conductor beside reference and low-level analogue circuitry is inviting noise into the design with almost theatrical enthusiasm. Increase separation, shorten the switching path, and provide an uninterrupted ground return.
+
+

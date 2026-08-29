@@ -1,0 +1,103 @@
+(kicad_sch
+  (version 20231120)
+  (generator "eeschema")
+  (generator_version "8.0")
+  (uuid "a1b2c3d4-0000-4000-8000-000000000001")
+  (paper "A4")
+  (title_block
+    (title "Detector Pod v3 HAT")
+    (date "2026-07-17")
+    (rev "A")
+    (company "UnderwaterDrone project")
+    (comment 1 "Pico carrier: PI front end, power, displays, sounder")
+    (comment 2 "Spec: docs/HAT-SCHEMATIC-SPEC.md")
+  )
+  (lib_symbols)
+  (sheet
+    (at 30.48 30.48)
+    (size 50.8 25.4)
+    (fields_autoplaced yes)
+    (stroke (width 0.1524) (type solid))
+    (fill (color 0 0 0 0.0000))
+    (uuid "a1b2c3d4-0000-4000-8000-00000000c001")
+    (property "Sheetname" "Power"
+      (at 30.48 29.7684 0)
+      (effects (font (size 1.27 1.27)) (justify left bottom))
+    )
+    (property "Sheetfile" "power.kicad_sch"
+      (at 30.48 56.4642 0)
+      (effects (font (size 1.27 1.27)) (justify left top))
+    )
+    (instances
+      (project "detector-hat"
+        (path "/a1b2c3d4-0000-4000-8000-000000000001" (page "2"))
+      )
+    )
+  )
+  (sheet
+    (at 101.6 30.48)
+    (size 50.8 25.4)
+    (fields_autoplaced yes)
+    (stroke (width 0.1524) (type solid))
+    (fill (color 0 0 0 0.0000))
+    (uuid "a1b2c3d4-0000-4000-8000-00000000c002")
+    (property "Sheetname" "TX_Damping"
+      (at 101.6 29.7684 0)
+      (effects (font (size 1.27 1.27)) (justify left bottom))
+    )
+    (property "Sheetfile" "tx_damping.kicad_sch"
+      (at 101.6 56.4642 0)
+      (effects (font (size 1.27 1.27)) (justify left top))
+    )
+    (instances
+      (project "detector-hat"
+        (path "/a1b2c3d4-0000-4000-8000-000000000001" (page "3"))
+      )
+    )
+  )
+  (sheet
+    (at 30.48 76.2)
+    (size 50.8 25.4)
+    (fields_autoplaced yes)
+    (stroke (width 0.1524) (type solid))
+    (fill (color 0 0 0 0.0000))
+    (uuid "a1b2c3d4-0000-4000-8000-00000000c003")
+    (property "Sheetname" "RX_Chain"
+      (at 30.48 75.4884 0)
+      (effects (font (size 1.27 1.27)) (justify left bottom))
+    )
+    (property "Sheetfile" "rx_chain.kicad_sch"
+      (at 30.48 102.1842 0)
+      (effects (font (size 1.27 1.27)) (justify left top))
+    )
+    (instances
+      (project "detector-hat"
+        (path "/a1b2c3d4-0000-4000-8000-000000000001" (page "4"))
+      )
+    )
+  )
+  (sheet
+    (at 101.6 76.2)
+    (size 50.8 25.4)
+    (fields_autoplaced yes)
+    (stroke (width 0.1524) (type solid))
+    (fill (color 0 0 0 0.0000))
+    (uuid "a1b2c3d4-0000-4000-8000-00000000c004")
+    (property "Sheetname" "IO_Pico"
+      (at 101.6 75.4884 0)
+      (effects (font (size 1.27 1.27)) (justify left bottom))
+    )
+    (property "Sheetfile" "io_pico.kicad_sch"
+      (at 101.6 102.1842 0)
+      (effects (font (size 1.27 1.27)) (justify left top))
+    )
+    (instances
+      (project "detector-hat"
+        (path "/a1b2c3d4-0000-4000-8000-000000000001" (page "5"))
+      )
+    )
+  )
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)

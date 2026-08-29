@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "hat") (type "KiCad") (uri "${KIPRJMOD}/hat.pretty") (options "") (descr "project footprints"))
+)

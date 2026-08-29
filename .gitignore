@@ -22,10 +22,6 @@ claude.sh
 .claude/
 .claude-session-backup/
 
-# Not in git yet. Each of these is its own project with its own working files;
-# they go in when they are ready, not before.
-MetalDetector/
-
 # Parked project ideas that aren't part of any current build.
 ArchiveIdeas/
 

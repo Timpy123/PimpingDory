@@ -1,0 +1,46 @@
+# Claude's own working files — never part of the project itself.
+# Listed explicitly even though the parent .gitignore currently ignores this
+# whole folder: when MetalDetector/ does go into git, these must stay out.
+.claude/
+.claude-session-backup/
+claude.sh
+CLAUDE.md
+
+.DS_Store
+
+# ---------------------------------------------------------------------------
+# Everything below is fetched, not authored. 1.3 GB of it, none of it ours,
+# all of it reproducible from the scripts named beside each entry.
+#
+# GitHub would reject some of it outright (100 MB per file), and pico-sdk and
+# picotool carry their own .git directories -- committing those records a bare
+# gitlink with no URL, which looks fine locally and clones as empty folders
+# for anyone else.
+
+# 976 MB, ARM's cross-compiler          -> ./toolchain.sh
+src/arm-gnu-toolchain-*
+
+# 137 MB app + 80 MB dmg, the autorouter -> ./freerouting.sh
+src/Freerouting.app
+src/freerouting-*.dmg
+src/freerouting-*.AppImage
+
+# 37 MB upstream checkout, has its own .git -> ./sdk.sh
+src/pico-sdk/
+
+# 18 MB, cmake fetches this itself on first configure -- mostly build state
+src/picotool/
+
+# build output
+src/detector-firmware/build/
+build/
+
+# Chasing's own document, their copyright
+docs/*.pdf
+
+# KiCad writes <project>-backups/ beside the project file and has no per-project
+# setting to redirect it -- auto_backup is a global preference (enabled, 25
+# files, 100 MB). The folder here is a SYMLINK to ../../tmp/kicad-backups/, so
+# the zips land on the scratch disk rather than in the repo. The symlink itself
+# is machine-local and must not be committed either.
+kicad/detector-hat-backups

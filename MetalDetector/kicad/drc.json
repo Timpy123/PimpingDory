@@ -1,0 +1,103 @@
+{
+    "$schema": "https://schemas.kicad.org/drc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-07-19T12:47:12+0200",
+    "kicad_version": "9.0.4",
+    "schematic_parity": [],
+    "source": "detector-hat.kicad_pcb",
+    "unconnected_items": [
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Zone 'GND_F.Cu' [GND] on F.Cu, priority 0",
+                    "pos": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "uuid": "ec8963f6-c3d8-40a9-9dc5-5c55922eb434"
+                },
+                {
+                    "description": "Zone 'GND_F.Cu' [GND] on F.Cu, priority 0",
+                    "pos": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "uuid": "ec8963f6-c3d8-40a9-9dc5-5c55922eb434"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Zone 'GND_F.Cu' [GND] on F.Cu, priority 2",
+                    "pos": {
+                        "x": 31.5,
+                        "y": 92.0
+                    },
+                    "uuid": "62fcf3a9-fcb2-4018-902d-047787580b40"
+                },
+                {
+                    "description": "Zone 'GND_B.Cu' [GND] on B.Cu, priority 0",
+                    "pos": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "uuid": "f37d0f47-8ac8-4d4f-ba21-c7fc1774d5b1"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Zone 'GND_F.Cu' [GND] on F.Cu, priority 0",
+                    "pos": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "uuid": "ec8963f6-c3d8-40a9-9dc5-5c55922eb434"
+                },
+                {
+                    "description": "Zone 'GND_F.Cu' [GND] on F.Cu, priority 0",
+                    "pos": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "uuid": "ec8963f6-c3d8-40a9-9dc5-5c55922eb434"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Zone 'GND_F.Cu' [GND] on F.Cu, priority 0",
+                    "pos": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "uuid": "ec8963f6-c3d8-40a9-9dc5-5c55922eb434"
+                },
+                {
+                    "description": "Zone 'GND_B.Cu' [GND] on B.Cu, priority 0",
+                    "pos": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "uuid": "f37d0f47-8ac8-4d4f-ba21-c7fc1774d5b1"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        }
+    ],
+    "violations": []
+}
