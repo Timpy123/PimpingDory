@@ -444,7 +444,8 @@ Hardware. None of this is started.
 
 2. **Light rig** — aluminium frame, 1/4 inch bolts and nuts, two **Wurkkos
    DL07** lights, with closed-cell PVC for buoyancy to offset the added mass.
-   Parts listed below.
+   Parts listed below, and the strap is under way — see *Building the light
+   rig*.
 
 3. **Battery** — replace the cells in the **19386-EE-1P3S21700** pack.
    Candidates:
@@ -467,6 +468,43 @@ Hardware. None of this is started.
    REST API has `GET /v1/tfcard/sdquery` and `POST /v1/tfcard/format` — "tfcard"
    is TransFlash, the old name for microSD, which is a hint that it is a card
    rather than eMMC. `--list` already reports what the API says about capacity.
+
+## Building the light rig
+
+Rather than a printed ring, the arm mounts on a **strap bent from thin
+aluminium** that follows the hull's top contour, with a flat tab at each end
+carrying a hole for a 1/4"-20 stud. A matching strap underneath and threaded
+rod down each side clamp the hull between them; the lights then mount on the
+studs.
+
+**1. The contour to build against**, laid against a centimetre rule:
+
+![Contour against a centimetre scale](reference/lightrig-1-contour.jpg)
+
+The profile runs from roughly the 9.5 cm to the 33.5 cm mark, so about
+**240 mm of developed length** — more than the hull's 188 mm width, because
+the strap follows the curve rather than crossing it. Read off the photo, so
+treat it as approximate. The shape is a raised centre with a step down each
+shoulder, then flat tabs.
+
+**2. Where the threaded rods land**, with the template between them:
+
+![Template with the threaded rods positioned](reference/lightrig-2-rod-positions.jpg)
+
+Two contours here, top and bottom, with a rod at each side — the pair of straps
+and the studs that join them.
+
+**3. Trial fit in thin aluminium:**
+
+![Aluminium strap trial-fitted on the drone](reference/lightrig-3-fitted.jpg)
+
+Sitting behind the top thruster duct, tabs clear of the hull, holes ready for
+the studs.
+
+**What the strap must clear**, from the callouts in the manual: the camera and
+LED lights on the front face, the flash light on top, the drain and vent holes,
+and the thruster intakes. In the photo it sits between the top duct and the two
+side ducts, which is the gap available.
 
 ## The compute module plugs
 
