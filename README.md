@@ -93,22 +93,21 @@ daemon starts itself if it is not already running:
 **Nothing is pushed at you until you ask.** The buoy relays no video and no
 telemetry until a client completes a handshake on UDP 40000, and the vehicle
 itself has every telemetry stream rate set to zero. Bind a socket and wait and
-you get nothing at all — that is not a fault, and it cost three trips to the
-water to work out. The script does the handshake and asks for the streams
-automatically; `--no-netcode` skips the handshake if you want to see the old
-behaviour.
+you get nothing at all, and it is not a fault. The script does the handshake
+and asks for the streams automatically; `--no-netcode` skips the handshake, for
+comparing against a client that does not do it.
 
 **On macOS the firewall silently eats inbound UDP.** Not "blocks with an
-error" — the packets never reach the process. A packet capture showed 6843
-video packets and 608 MAVLink packets arriving on the wire while the sockets
-bound to those exact ports reported *silent*. So every mode that listens lowers
-the firewall for the session and puts it back on exit, which is why those
-modes want `sudo -v` first. Downloading never touches it. On Windows, allow
-Python through the firewall prompt when it appears.
+error" — the packets never reach the process at all. A packet capture will show
+thousands of them arriving on the wire while the socket bound to that exact
+port reports silence. So every mode that listens lowers the firewall for the
+session and puts it back on exit, which is why those modes want `sudo -v`
+first. Downloading never touches it. On Windows, allow Python through the
+firewall prompt when it appears.
 
 **Filenames are never percent-encoded.** The buoy does not decode them, so
-`20260717_133442(1).mp4` sent as `…%281%29.mp4` comes back `500`. Five of 24
-files failed this way before it was fixed.
+`20260717_133442(1).mp4` sent as `…%281%29.mp4` comes back `500`. Any
+filename with brackets in it hits this.
 
 **Expect dropouts.** The buoy's range is about 15 m. Downloads are checked
 against the size the API reports and completed files are skipped, so re-running
@@ -166,8 +165,7 @@ DoryControl.bat  ─┘    (Windows goes via DoryControl.ps1)
 ```
 
 The launchers do one job each: gather the network facts, export them, hand
-over. Two hand-maintained implementations drift, and the drift only shows up
-at the water where neither can be debugged.
+over. One implementation, so the platforms cannot drift apart.
 
 ---
 
@@ -273,9 +271,9 @@ arrow keys follow the joystick convention instead — pushing a stick away from
 you is forwards — which is why ↑ is forward but `w` is up. Pitch is inverted
 on the wire.
 
-**Not yet confirmed in water.** The control path is proven — it arms, and a
-sweep drives all ten inputs for eight seconds each with no dropout — but which
-thruster each slot actually turns can only be seen, not logged.
+**Not yet confirmed in water.** The control path works — it arms and every
+input drives — but which thruster each slot actually turns can only be seen,
+not logged.
 `./scripts/DoryTest.sh --sweep` runs each in turn and announces it; in a
 bucket, with the tether in hand.
 
@@ -296,13 +294,13 @@ bucket, with the tether in hand.
 underwater drone with no way back is a brick, and the vendor app is the only
 official route.
 
-Two of the four questions are answered: it reports `AUTOPILOT_VERSION` but
-identifies no board, and all 588 parameters are readable and say ArduSub. What
-remains: where the firmware physically lives — the flight controller is a
-separate MCU behind the buoy's Linux box, so any reflash is likely *through*
-it — and whether a stock build even targets this board. "Pixhawk-family" is
-not a build target, and the thruster mapping and the light on output 6 are
-Chasing's own and would be lost.
+What is known: it answers `AUTOPILOT_VERSION` but identifies no board, and
+all 588 parameters are readable and say ArduSub. What is not: where the
+firmware physically lives — the flight controller is a separate MCU behind the
+buoy's Linux box, so any reflash is likely *through* it — and whether a stock
+build even targets this board. "Pixhawk-family" is not a build target, and the
+thruster mapping and the light on output 6 are Chasing's own and would be
+lost.
 
 ---
 
