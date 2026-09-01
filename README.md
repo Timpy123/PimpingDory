@@ -324,13 +324,31 @@ catches people out: a stubby bit will not reach it.
 [This video](https://www.youtube.com/watch?v=_ONTOr11_d4) covers most of the
 part replacements.
 
+### The connector nuts
+
+The thruster and light leads use small circular IP68 connectors, the kind
+usually described as "Ray Wu style" after the AliExpress seller — though the
+keyway on these is not the same, so they are something else in the same family.
+
+![The IP68 connectors on the compute module](reference/ip68-connector.jpg)
+
+**If you recognise them, please open an issue.** The closest match by size is
+the SP13/M13 family, but the keyway does not line up, and no supplier found so
+far names the part. Knowing the manufacturer would make the plugs sourceable
+instead of scavengeable.
+
+**The nut is 13.5 mm and the socket that fits it is 14 mm**, which is half a
+millimetre of slop. Wrap a little aluminium foil or paper round the nut before
+putting the socket on: without it the socket will round the flats off, and a
+rounded nut on a waterproof connector is not a small problem.
+
 ### Tools and parts
 
 | what | for | where |
 |---|---|---|
 | **T6H bit set, 50 mm shaft** | the security screw — the long shaft is the point | [amazon.nl B0GXNLXH3R](https://www.amazon.nl/-/en/gp/product/B0GXNLXH3R/ref=ewc_pr_img_1) |
 | **T6H screwdriver set** | the cover screws | [amazon.nl B0CZDN9Q1R](https://www.amazon.nl/dp/B0CZDN9Q1R?ref=ppx_yo2ov_dt_b_fed_asin_title) |
-| **Connector release tool** | unplugging the wire connectors from the compute module | [amazon.nl B0FMR3Q7K2](https://www.amazon.nl/-/en/gp/product/B0FMR3Q7K2/ref=ewc_pr_img_1?th=1) |
+| **Lambda probe socket, 3/8" drive, 14 mm** (SW14, CrV, SL-2508-026) | undoing the IP68 connector nuts on the compute module. A lambda socket is slotted down one side so a cable can pass through it — which is exactly what a nut with a cable coming out of it needs. The nut is 13.5 mm, so pack it out with a wrap of paper or aluminium foil before turning it, or the socket will round the flats off | [amazon.nl B0FMR3Q7K2](https://www.amazon.nl/dp/B0FMR3Q7K2) |
 | **ST2.2 × 6.5 screws**, DIN 7983 TX, A4 | replacing the cover screws | [rvspaleis.nl](https://www.rvspaleis.nl/plaatschroeven/din-7983-tx/din-7983tx-[-]-a4-[-]-2,2/7983-4-2.2x6.5tx_1) |
 | **Flat aluminium profile**, 20 × 2 × 2000 mm | the light-rig arm | [gamma.nl B175328](https://www.gamma.nl/assortiment/profiel-plat-aluminium-brut-20x2x2000mm/p/B175328) |
 | **1/4 inch thread adapters** | mounting the lights to the arm — standard 1/4"-20 tripod thread | [amazon.nl B0DCGCCXQC](https://www.amazon.nl/dp/B0DCGCCXQC?ref=ppx_yo2ov_dt_b_fed_asin_title) |
