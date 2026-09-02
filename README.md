@@ -44,6 +44,7 @@ through `.\scripts\DoryControl.bat`.
 
 ```sh
 ./scripts/DoryControl.sh --list                       # what is on the card
+./scripts/DoryControl.sh --api                        # what every endpoint answers
 ./scripts/DoryControl.sh --retrievemedia ~/dive       # download somewhere else
 ./scripts/DoryControl.sh --retrievemedia --removemedia # download, then free the card
 ./scripts/DoryControl.sh --video                      # live picture in VLC

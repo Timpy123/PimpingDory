@@ -63,6 +63,12 @@ USAGE = r"""DoryControl -- Chasing Dory over its private REST API
                            ctrl-C. Applies to --control, --telemetry,
                            --netcode and the --video listen.
   --list                   show what is on the device and exit
+  --api                    read every endpoint the vendor app knows about and
+                           print what each one answers. GET only -- nothing
+                           here changes anything on the device, and the
+                           state-changing half is listed but never called.
+                           This is where /v1/features says whether the camera
+                           can do more than 1080p.
   --netcode                run only the buoy handshake and report. This is
                            what asks the drone to start pushing video and
                            telemetry; --video, --telemetry and --control all
@@ -140,6 +146,7 @@ FINDLINK = os.environ.get("DORY_FINDLINK") == "1"
 PROBE = os.environ.get("DORY_PROBE") == "1"
 IDENTIFY = os.environ.get("DORY_IDENTIFY") == "1"
 MAXPOWER = os.environ.get("DORY_MAXPOWER") == "1"
+APIDUMP  = os.environ.get("DORY_API") == "1"
 DIAGNOSE = os.environ.get("DORY_DIAGNOSE") == "1"
 DAEMON  = os.environ.get("DORY_DAEMON") == "1"
 SENDCMD = os.environ.get("DORY_SENDCMD") or ""
@@ -2428,6 +2435,150 @@ def maxpower(total=30.0, every=5.0):
     log(f"   maxpower: peak={peak_a}A rows={rows} armed={armed_seen} batts={ {k: v for k, v in batts.items()} }")
     return 0
 
+# Every path the vendor app defines, split by whether reading it is safe.
+# Taken from the app's own Retrofit interfaces, so this is the complete set it
+# knows about -- not a guess, and not a scan.
+API_GET = [
+    ("/v1/features",                 "what the camera can do -- resolutions and frame rates"),
+    ("/v1/params",                   "device settings"),
+    ("/v1/status",                   "live device status"),
+    ("/v1/devinfo",                  "device info"),
+    ("/v1/versions",                 "firmware versions"),
+    ("/v1/manufacturer",             "manufacturer string"),
+    ("/v1/devcode",                  "device code"),
+    ("/v1/dev/sn",                   "serial number"),
+    ("/v1/rovs",                     "attached ROVs"),
+    ("/v1/medias",                   "media list"),
+    ("/v1/tfcard/sdquery",           "card status and capacity"),
+    ("/v1/charge",                   "power-bank toggle state"),
+    ("/v1/homepos",                  "home position"),
+    ("/v1/rotation/speed",           "camera rotation speed"),
+    ("/v1/upgrade/status",           "firmware upgrade status"),
+    ("/v1/wifi/hwmode",              "wifi hardware mode"),
+    ("/v1/wifi/5g/capacity",         "5 GHz capability"),
+    ("/v1/sensors/acc/cali/status",  "accelerometer calibration"),
+    ("/v1/sensors/gyro/cali/status", "gyro calibration"),
+    ("/v1/sensors/mag/cali/status",  "magnetometer calibration"),
+]
+
+# NOT queried. Every one of these changes something, and two of them are
+# destructive: /v1/tfcard/format erases the card, /v1/upgrade writes firmware.
+# Listed so the surface is documented, never called.
+API_POST = [
+    ("/v1/tfcard/format",  "ERASES THE CARD"),
+    ("/v1/upgrade",        "WRITES FIRMWARE"),
+    ("/v1/reboot",         "reboots"),
+    ("/v1/sleep",          "sleeps"),
+    ("/v1/settime",        "sets the clock"),
+    ("/v1/capture",        "takes a photo"),
+    ("/v1/record",         "starts/stops recording"),
+    ("/v1/control",        "takes the control role"),
+    ("/v1/charge",         "toggles the power bank"),
+    ("/v1/osd",            "recording watermark on/off"),
+    ("/v1/params/led",     "lights (takes no body)"),
+    ("/v1/params/cable",   "tether setting"),
+    ("/v1/params/cablespeed", "tether speed"),
+    ("/v1/rotation/speed", "camera rotation speed"),
+    ("/v1/vol",            "volume"),
+    ("/v1/module/rov",     "rov module"),
+    ("/v1/alarm",          "alarm"),
+    ("/v1/cali/depther",   "depth sensor calibration"),
+    ("/v1/wifiscan",       "wifi scan"),
+    ("/v1/wifista",        "wifi station mode"),
+    ("/v1/wifi/hwmode",    "wifi hardware mode"),
+    ("/v1/wifi/5g/capacity", "5 GHz capability"),
+    ("/v1/sensors/acc/cali",  "accelerometer calibration"),
+    ("/v1/sensors/gyro/cali", "gyro calibration"),
+    ("/v1/sensors/mag/cali",  "magnetometer calibration"),
+    ("/v1/debug/ai_threshold", "debug"),
+    # bait-boat only, not the Dory's
+    ("/v1/lift", "bait boat"), ("/v1/rtl", "bait boat"),
+    ("/v1/cruise", "bait boat"), ("/v1/set/waypoint", "bait boat"),
+    ("/v1/baitboat", "bait boat"),
+]
+
+def api_dump(timeout=4):
+    """GET every documented endpoint on every host, and print what comes back.
+
+    Read-only by construction: this issues GET and nothing else. The
+    state-changing half of the API is listed at the end but never called --
+    /v1/tfcard/format erases the card and /v1/upgrade writes firmware, and a
+    survey tool has no business touching either.
+
+    Both hosts are tried because the app itself uses two base URLs: the AP at
+    192.168.1.1 for most things and the ROV at 192.168.1.88 for its own
+    status. Which endpoint lives where is not documented anywhere, so ask
+    both and record the answer."""
+    first = (os.environ.get("DORY_HOST") or "192.168.1.1").split(":")[0]
+    hosts = [first] + [h for h in ("192.168.1.1", "192.168.1.88") if h != first]
+
+    say(f"Reading {len(API_GET)} endpoints on {', '.join(hosts)}. GET only —")
+    say("nothing here changes anything on the device.")
+
+    found = {}
+    for host in hosts:
+        say("")
+        say("=" * 68)
+        say(f"  http://{host}")
+        say("=" * 68)
+        answered = 0
+        for path, what in API_GET:
+            url = f"http://{host}{path}"
+            try:
+                req = urllib.request.Request(url, method="GET")
+                req.add_header("Connection", "close")
+                with urllib.request.urlopen(req, timeout=timeout) as r:
+                    raw = r.read(20000).decode("utf-8", "replace").strip()
+                    st = r.status
+            except urllib.error.HTTPError as e:
+                st, raw = e.code, e.read(400).decode("utf-8", "replace").strip()
+            except Exception as e:
+                say(f"  {path:<30} -- {e}")
+                continue
+
+            # A router's login page is a 200 too. Only JSON counts as an answer.
+            try:
+                obj = json.loads(raw)
+            except Exception:
+                obj = None
+            if obj is None:
+                say(f"  {path:<30} {st}  not JSON: {raw[:60]}")
+                continue
+
+            answered += 1
+            found.setdefault(path, []).append(host)
+            say("")
+            say(f"  {path}  —  {what}")
+            say(f"  {'-' * (len(path) + len(what) + 7)}")
+            pretty = json.dumps(obj, indent=2, ensure_ascii=False)
+            for line in pretty.splitlines()[:60]:
+                say("    " + line)
+            if len(pretty.splitlines()) > 60:
+                say(f"    ... {len(pretty.splitlines()) - 60} more lines, full text in the log")
+            log(f"   API {host}{path} -> {st} {raw[:4000]}")
+        say("")
+        say(f"  {answered} of {len(API_GET)} answered with JSON on {host}")
+
+    say("")
+    say("=" * 68)
+    say("  SUMMARY")
+    say("=" * 68)
+    for path, what in API_GET:
+        where = ", ".join(found.get(path, [])) or "—"
+        say(f"  {path:<30} {where}")
+
+    say("")
+    say("  NOT queried — these change state, and two are destructive:")
+    for path, what in API_POST:
+        mark = "  !!" if what.isupper() else "    "
+        say(f"  {mark} POST {path:<26} {what}")
+    say("")
+    say("  If /v1/features lists only 1080P, that is the camera's ceiling and")
+    say("  no setting will raise it. If it lists more, the resolution is")
+    say("  configurable and worth pursuing before any hardware change.")
+    log(f"   api_dump: {sum(len(v) for v in found.values())} answers across {len(hosts)} hosts")
+    return 0
+
 def lights_only(seconds=4.0):
     """Set the headlights and exit. No daemon, no second terminal.
 
@@ -3266,6 +3417,12 @@ def run_live():
     if LIVE:
         return live_video()
     return telemetry_loop()
+
+# The API survey talks to fixed addresses over HTTP and listens on nothing, so
+# it runs before discovery, before the netcode handshake and without the
+# firewall being touched.
+if APIDUMP:
+    sys.exit(api_dump())
 
 # Video and telemetry need no host discovery -- and skipping it means they
 # still work if the HTTP side is being odd.

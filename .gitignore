@@ -36,3 +36,6 @@ computepluglayout.png
 CLAUDE.md
 scripts/.firewall_was_on
 app/REFERENCE.md
+
+# Python bytecode, at any depth. Regenerated on every run.
+__pycache__/

@@ -93,6 +93,9 @@ Work through it in this order, since each depends on the last:
 | `DoryControl.bat --retrievemedia .\scratch --debug` | everything downloads, including the `(1)` filenames |
 | `DoryControl.bat --retrievemedia .\scratch` again | every file skipped as already present |
 | `DoryControl.bat --probe --debug` | STEP 0 through STEP 5, one arm and one up |
+| `DoryControl.bat --api` | every endpoint the app knows about, answered or not. Needs no firewall change — it listens on nothing |
+| `DoryControl.bat --lights on` then `--lights off` | the headlights change and the command exits. Nothing arms |
+| `DoryControl.bat --identify` | firmware string, then all 588 parameters |
 
 Things most likely to be wrong, all in the `.ps1`:
 

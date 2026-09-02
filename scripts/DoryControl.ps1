@@ -57,6 +57,9 @@ $Retrieve = ''; $Remove = 0; $Live = 0; $LiveFile = ''; $DoList = 0
 $Telem = 0; $Control = 0; $Power = 40; $SelfTest = 0
 $Netcode = 1; $NetcodeOnly = 0; $ControlKey = ''; $Timeout = ''
 $FindLink = 0; $Probe = 0; $Diagnose = 0; $Daemon = 0; $SendCmd = ''
+$ApiDump = 0; $Identify = 0; $MaxPower = 0; $Gap = 3
+$Lights = $env:DORY_LIGHTS; if (-not $Lights) { $Lights = 'off' }
+$LightsGiven = 0
 $DoryHost = $env:DORY_HOST; if (-not $DoryHost) { $DoryHost = '192.168.1.1' }
 $Scan = 0; $Force = 1; $Yes = 1; $DebugOn = ''
 
@@ -91,6 +94,23 @@ for ($i = 0; $i -lt $argv.Count; $i++) {
         '--findlink'  { $FindLink = 1 }
         '--probe'     { $Probe = 1 }
         '--diagnose'  { $Diagnose = 1 }
+        # One session, every axis in turn -- the axis-mapping run. It is
+        # --control with a fixed key list, not a mode of its own: a separate
+        # process per axis leaves a gap the drone reports as a lost heartbeat.
+        '--sweep' {
+            $Control = 1
+            $ControlKey = 'a,forward,back,up,down,left,right,rollleft,rollright,pitchup,pitchdown'
+            if (Next-IsValue $i) { $Timeout = $argv[++$i] } else { $Timeout = 8 }
+        }
+        '--identify'  { $Identify = 1 }
+        '--maxpower'  { $MaxPower = 1 }
+        '--api'       { $ApiDump = 1 }
+        '--gap'       { $Gap = $argv[++$i] }
+        # A value is optional: bare --lights turns them on.
+        '--lights' {
+            if (Next-IsValue $i) { $Lights = $argv[++$i] } else { $Lights = 'on' }
+            $LightsGiven = 1
+        }
         '--daemon'    { $Daemon = 1 }
         '--send'      { $SendCmd = $argv[++$i] }
         '--sock'      { $env:DORY_SOCK = $argv[++$i] }
@@ -110,9 +130,21 @@ for ($i = 0; $i -lt $argv.Count; $i++) {
 
 if (-not $Retrieve -and -not $Remove -and -not $Live -and -not $DoList -and
     -not $Telem -and -not $Control -and -not $NetcodeOnly -and -not $FindLink -and
-    -not $Probe -and -not $Diagnose -and -not $Daemon -and -not $SendCmd) {
+    -not $Probe -and -not $Diagnose -and -not $Daemon -and -not $SendCmd -and
+    -not $ApiDump -and -not $Identify -and -not $MaxPower -and -not $LightsGiven) {
     Show-Usage
     exit 2
+}
+
+# --lights with nothing else is an action in its own right: set the light and
+# exit. Requiring a daemon and a second terminal to turn a lamp on and off was
+# a bad design.
+$LightsOnly = 0
+if ($LightsGiven -and -not $Retrieve -and -not $Remove -and -not $Live -and
+    -not $DoList -and -not $Telem -and -not $Control -and -not $NetcodeOnly -and
+    -not $FindLink -and -not $Probe -and -not $Diagnose -and -not $Daemon -and
+    -not $SendCmd -and -not $Identify -and -not $MaxPower -and -not $ApiDump) {
+    $LightsOnly = 1
 }
 
 # --- python ------------------------------------------------------------------
@@ -225,7 +257,8 @@ Write-Dbg "arp      $($Neighbours -replace "`n", ' ')"
 # is appropriate here, and turning a Windows firewall profile off is a much
 # bigger hammer. It warns instead, because a blocked inbound port looks exactly
 # like a drone that is not sending.
-if ($Live -or $Telem -or $Control -or $Probe -or $Diagnose -or $FindLink -or $Daemon) {
+if ($Live -or $Telem -or $Control -or $Probe -or $Diagnose -or $FindLink -or
+    $Daemon -or $Identify -or $MaxPower -or $LightsOnly) {
     Write-Dbg 'This mode listens on a UDP port.'
     Write-Dbg 'If Windows prompts to allow Python on this network, say YES --'
     Write-Dbg 'and tick Private networks. Blocked inbound UDP looks exactly'
@@ -261,6 +294,12 @@ $env:DORY_PROBE = "$Probe"
 $env:DORY_DIAGNOSE = "$Diagnose"
 $env:DORY_DAEMON = "$Daemon"
 $env:DORY_SENDCMD = $SendCmd
+$env:DORY_API = "$ApiDump"
+$env:DORY_IDENTIFY = "$Identify"
+$env:DORY_MAXPOWER = "$MaxPower"
+$env:DORY_GAP = "$Gap"
+$env:DORY_LIGHTS = $Lights
+$env:DORY_LIGHTS_ONLY = "$LightsOnly"
 
 & $Py $PyFile
 exit $LASTEXITCODE
