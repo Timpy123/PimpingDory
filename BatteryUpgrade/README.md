@@ -134,11 +134,40 @@ So there are three routes, and only one of them is cheap and certain:
 **Recelling is therefore the plan**, and the I2C finding is a positive reason
 for it rather than a compromise.
 
-### The measurement that would settle the bus
+### Identifying the chip is optional
 
-If it ever matters, two probe wires on `SCL`/`SDA` and a logic analyser name the
-chip family from the address alone: `0x0B` is SMBus Smart Battery, `0x55` a TI
-BQ-series gauge, `0x50`–`0x57` a 24Cxx EEPROM — an ID chip, not a gauge.
+**The recell plan does not need it.** The original board stays, so whatever is on
+that bus carries on working untouched. Identification only matters if a
+non-original pack is ever considered — and that is already ruled out for other
+reasons.
+
+If curiosity wins, no test equipment is required:
+
+**Photograph the pack's BMS.** Peel back the black tape along the top edge and
+photograph any IC markings. A part number read straight off the silicon answers
+it outright, and costs nothing.
+
+**Or scan the bus for its address.** The address alone names the chip family:
+
+| address | what it is |
+|---|---|
+| `0x0B` | SMBus Smart Battery — a real gauge |
+| `0x55` | TI BQ-series gauge |
+| `0x50`–`0x57` | 24Cxx EEPROM — an ID chip, not a gauge |
+
+Any microcontroller does this; a logic analyser is overkill because only the
+address is wanted, not the traffic. A Raspberry Pi needs one command
+(`i2cdetect -y 1`); an Arduino, ESP32 or Pico needs the stock I2C-scanner
+sketch.
+
+Three things to get right if scanning:
+
+- **Unplug the 2-way connector from the drone board first.** The STM32 is
+  already a master on that bus, and two masters fight.
+- **Share a ground** — the pack negative, via the XT30.
+- **Provide pull-ups.** They live on the drone board, so with the cable
+  unplugged there are none; use the microcontroller's internal ones or fit 4.7k
+  resistors to 3.3 V.
 
 ## Why tabless
 
