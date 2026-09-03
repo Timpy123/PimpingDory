@@ -437,11 +437,42 @@ No transceiver has yet been positively identified, so this remains speculative.
 
 A small white two-wire connector with red and black leads is fitted near the microSD socket.
 
+### What it carries — I2C, not power
+
+**Observation: CERTAIN**
+
+Both pins are silkscreened, and at magnification the labels read **`SCL`** (the
+pin taking the black lead) and **`SDA`** (the pin taking the red lead). This is
+an **I2C bus**. The red-and-black colouring is only the cable the factory used;
+it carries clock and data, not a supply.
+
+See `reference/board-sdcard.jpg`. Nearby on the same silkscreen are the pads
+`12V_OUT` (two), `12V0`, `BATTERY` and a `+`, so the board does break out its
+power rails — just not on this connector.
+
+### What is on the other end
+
+**Observation: CERTAIN** — the thinner of the battery's two cables plugs in
+here. The thick pair goes to the XT30, which is the whole power path.
+
+**Inference: MODERATE** — something in the battery pack therefore speaks I2C.
+On a 3S pack with no balance lead the natural candidate is a **fuel gauge or
+smart BMS** reporting state of charge, cell voltages and temperature digitally.
+
+**Unresolved, and worth stating plainly:** the vehicle reports
+`BATT_MONITOR = 5`, which in ArduPilot is *analogue voltage and current* — a
+divider and a shunt. A smart battery read over I2C would normally be
+`BATT_MONITOR = 7` or `11`. Either this bus is consumed by the STM32 as a power
+manager rather than by the ArduSub battery driver, or it carries something other
+than gauge data — a thermistor or an ID chip. A photograph cannot separate
+those; following the cable, or reading what is under the pack's black tape, can.
+
 ### Exact series
 
 **Inference: LOW / GUESS**
 
-It resembles a small JST-family wire-to-board connector, but the exact series cannot be determined confidently from the photograph alone.
+It resembles a small JST-family wire-to-board connector, 2-way, but the exact
+series cannot be determined confidently from the photograph alone.
 
 Candidates could include:
 
@@ -812,7 +843,12 @@ Measure it or read the marking.
 
 **Observation: HIGH confidence**
 
-No obvious, positively identified IMU, barometer/depth sensor, or magnetometer has been identified on the photographed side of this PCB.
+No obvious, positively identified IMU or magnetometer has been identified on
+the photographed side of this PCB.
+
+**The pressure/depth sensor has since been located** — it is the gold square
+with the central opening, section 21, now resolved to a gel-filled port. The
+IMU and magnetometer remain unidentified.
 
 ### Possible explanations
 
@@ -850,19 +886,25 @@ A separate sensor board could provide cleaner inertial data.
 
 A square gold feature with a central circular opening is present near the upper-center region, with passives and traces around it.
 
-### Function
+### Function — a pressure sensor
 
-**Inference: LOW / GUESS**
+**Observation: HIGH confidence**
 
-Possible interpretations include:
+A later macro photograph (`reference/board-pressure-sensor.jpg`) resolves the
+central opening. Sitting in it is a **white gel dome**.
 
-- bottom-port pressure-sensor interface,
-- mechanical pressure opening,
-- RF/contact structure,
-- calibration/test feature,
-- mechanical/electrical fixture point.
+Gel over a die is the standard construction for a **media-isolated pressure
+sensor**: the gel transmits pressure to the silicon while keeping the die away
+from whatever is on the other side of the port. That is what a depth sensor
+looks like, and on an underwater vehicle that is what it almost certainly is.
 
-A bottom-port pressure-sensor opening is an attractive possibility for an underwater vehicle, but there is not enough evidence to identify it confidently.
+The remaining uncertainty is the part, not the function — no marking is legible
+on it, and the sensor's own package is under the square. The `SCL`/`SDA`
+connector in section 9 and the general prevalence of I2C pressure parts make an
+I2C sensor likely, but the die has not been traced to that bus.
+
+The earlier alternatives — RF structure, calibration feature, fixture point —
+are ruled out by the gel: none of them would be gel-filled.
 
 ---
 
@@ -1387,11 +1429,11 @@ Look specifically for:
 
 - Exact identity and function of the `HB1621S`-marked 16-pin IC.
 - Exact tether electrical protocol.
-- Exact two-pin white connector family.
+- Exact two-pin white connector family (its function is settled: I2C).
 - Exact STM32 crystal frequency.
 - Whether the factory ESC firmware is BLHeli_S-derived.
-- Whether the gold square/hole is related to a pressure sensor.
-- Exact location of the IMU/depth sensor.
+- Exact location of the IMU and magnetometer.
+- What is on the far end of the `SCL`/`SDA` cable to the battery.
 - Whether the card socket is populated, and with what.
 
 ## Resolved since this document was first written

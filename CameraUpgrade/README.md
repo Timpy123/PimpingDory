@@ -35,11 +35,31 @@ The sensor itself faces the lens, inside the barrel, so **it appears in none of
 these photos**. There is silkscreen along the right edge of the board that is
 present but not resolvable at this distance.
 
-Two measurements would move this on, and neither needs the barrel opened:
+## The ribbon: 20-way, 0.5 mm pitch
 
-- the **FFC contact count and pitch** — 24 vs 30 pins is the difference between
-  "any module with this cable" and "no"
-- the **silkscreen part number**, with a macro shot
+![The camera FFC where it lands on the compute module](../reference/camera-ffc-connector.jpg)
+
+Settled, by two independent measurements that agree:
+
+- **Counted from the photograph.** A brightness profile across the gold contact
+  row of the mating connector, run at five different scan lines, finds 18–19
+  ridges at a very even ~21 px spacing. The outermost one or two sit under the
+  housing where they cannot be separated, so the count is **20** — 18 and 19 are
+  not standard sizes, 20 is.
+- **Measured with a caliper.** The ribbon is **10 mm** wide. A 20-way FFC at
+  0.5 mm pitch is 19 × 0.5 + ~0.8 mm of edge margin = **10.3 mm**.
+
+So: **20-way, 0.5 mm pitch, ~10 mm ribbon** — a completely standard, sourceable
+part rather than anything proprietary.
+
+**This is a third piece of evidence for a parallel-interface sensor.** A 20-way
+ribbon is about right for **parallel DVP**: 8–12 data bits, PCLK, HSYNC, VSYNC,
+XCLK, I2C and the rails. A 2-lane **MIPI CSI-2** camera needs far fewer
+conductors — 10 to 12 is plenty. The cable width is independent of the spec
+sheet and of the optical format, and it points the same way as both.
+
+What still needs the barrel opened: the **silkscreen part number**, which is
+present on the module board but not resolvable at photograph distance.
 
 ## A likely sensor, not a confirmed one
 
