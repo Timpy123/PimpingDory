@@ -36,6 +36,16 @@ the studs that join them.
 Sitting behind the top thruster duct, tabs clear of the hull, holes ready for
 the studs.
 
+**4. Both lamps mounted, top position:**
+
+![Diving lamp harness on top, both DL07 mounted](diving-lamp-harnass-top.jpg)
+
+**An example, not the final layout, and taken before any XPS was added.** The
+lamps will likely move to the **bottom** instead, because of their weight — the
+pair adds 556 g in air, and mass carried high raises the centre of gravity,
+which is the opposite of what keeps a submersible upright. Foam belongs high and
+mass low.
+
 ## What it must clear
 
 From the callouts in the manual: the camera and LED lights on the front face,
